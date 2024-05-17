@@ -1,0 +1,156 @@
+server:
+  port: 7001
+  servlet:
+    session:
+      cookie:
+        same-site: none
+spring:
+  jackson:
+    time-zone: Asia/Kolkata
+  application:
+    name: auth-provider-application
+  kafka:
+    bootstrap-servers: ${BOOTSTRAP_SERVER}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: com.bloggios.auth.provider
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT:5432}/${POSTGRES_DATABASE}?currentSchema=auth-provider
+    hikari:
+      username: ${POSTGRES_USERNAME}
+      password: ${POSTGRES_PASSWORD}
+      maximum-pool-size: ${POSTGRES_POOL_SIZE:100}
+      minimum-idle: ${POSTGRES_IDLE:7}
+      leak-detection-threshold: 120000
+      max-lifetime: 1800000
+      idle-timeout: 600000
+      connection-timeout: 600000
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+
+application:
+  version: @version@
+  email-provider: ${EMAIL_PROVIDER_ID:BG-AUTH-LOCAL-EMAIL-1}
+  profile: ${ACTIVE_PROFILE}
+
+elasticsearch:
+  server: ${ES_SERVER:localhost}
+  username: ${ES_USERNAME:root}
+  password: ${ES_PASSWORD:root}
+  indices:
+    user-auth: ${ACTIVE_PROFILE:local}.auth.provider.user_auth
+    registration-otp: ${ACTIVE_PROFILE:local}.auth.provider.registration_otp
+    forget-password: ${ACTIVE_PROFILE:local}.auth.provider.forget_password
+
+auth-server:
+  allowed-roles:
+    cookie-name: bloggios-auth
+    roles-to-allow:
+      devsandbox:
+        origin-name: https://bloggios.cloud
+        must-roles:
+          - ROLE_DEVSANDBOX
+          - ROLE_DEVELOPER
+      devsandbox-protocol:
+        origin-name: https://www.bloggios.cloud
+        must-roles:
+          - ROLE_DEVSANDBOX
+          - ROLE_DEVELOPER
+      production:
+        origin-name: https://www.bloggios.com
+        must-roles:
+          - ROLE_USER
+      production-protocol:
+        origin-name: https://bloggios.com
+        must-roles:
+          - ROLE_USER
+      api-testing:
+        origin-name: http://localhost:1000
+        must-roles:
+          - ROLE_DEVELOPER
+          - ROLE_POSTMAN
+      api-testing-new-port:
+        origin-name: http://localhost:2000
+        must-roles:
+          - ROLE_DEVELOPER
+          - ROLE_POSTMAN
+      uat:
+        origin-name: https://uat.bloggios.com
+        must-roles:
+          - ROLE_USER
+  OAuth2:
+    authorized-redirect-uris:
+      - http://localhost:1000/oauth2/redirect
+      - http://localhost:2000/oauth2/redirect
+      - https://bloggios.com/oauth2/redirect
+      - https://bloggios.cloud/oauth2/redirect
+
+refresh-mgmt:
+  cookie-name: ${ACTIVE_PROFILE:local}.bg-refresh-mgmt
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL}
+    enabled: false
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL:info}
+  config: classpath:logback/auth-provider.xml
+
+auth-provider:
+  kafka:
+    producer:
+      topics:
+        otp-payload: ${ACTIVE_PROFILE:local}.auth-provider.otp
+        password-changed: ${ACTIVE_PROFILE:local}.auth-provider.password-changed
+        forget-password: ${ACTIVE_PROFILE:local}.auth-provider.forget-password
+        user: ${ACTIVE_PROFILE:local}.auth-provider.user
+    consumer:
+      group-id: ${ACTIVE_PROFILE:local}.auth-provider.application
+      topics:
+        profile-added: ${ACTIVE_PROFILE:local}.user-provider.profile-added
+        profile-badge: ${ACTIVE_PROFILE:local}.user-provider.profile-badge
+
+authentication:
+  key-provider:
+    private-key: ${PRIVATE_KEY:classpath:security/privkey.pem}
+    public-key: ${PUBLIC_KEY:classpath:security/pubkey.pem}
+  path-exclude:
+    paths:
+      - /auth-provider/v1.0/user-auth/auth/**
+      - /auth-provider/v1.0/authentication/**
+      - /actuator/**
+      - /oauth2/**
