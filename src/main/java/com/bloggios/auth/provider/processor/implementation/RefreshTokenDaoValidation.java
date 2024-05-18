@@ -28,7 +28,6 @@ import com.bloggios.auth.provider.constants.ServiceConstants;
 import com.bloggios.auth.provider.dao.implementation.pgsqlimplementation.RefreshTokenDao;
 import com.bloggios.auth.provider.modal.RefreshTokenEntity;
 import com.bloggios.auth.provider.payload.record.RefreshTokenDaoValidationRecord;
-import com.bloggios.auth.provider.utils.CookieUtils;
 import com.bloggios.auth.provider.utils.IpUtils;
 import com.bloggios.auth.provider.utils.JwtDecoderUtil;
 import org.slf4j.Logger;
@@ -38,7 +37,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 import java.util.Optional;
 

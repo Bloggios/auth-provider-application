@@ -1,12 +1,6 @@
 server:
   port: 7001
-  servlet:
-    session:
-      cookie:
-        same-site: none
 spring:
-  jackson:
-    time-zone: Asia/Kolkata
   application:
     name: auth-provider-application
   kafka:
@@ -86,23 +80,13 @@ auth-server:
         must-roles:
           - ROLE_USER
       api-testing:
-        origin-name: http://localhost:1000
-        must-roles:
-          - ROLE_DEVELOPER
-          - ROLE_POSTMAN
-      api-testing-new-port:
         origin-name: http://localhost:2000
         must-roles:
           - ROLE_DEVELOPER
           - ROLE_POSTMAN
-      uat:
-        origin-name: https://uat.bloggios.com
-        must-roles:
-          - ROLE_USER
   OAuth2:
     authorized-redirect-uris:
-      - http://localhost:1000/oauth2/redirect
-      - http://localhost:2000/oauth2/redirect
+      - http://localhost:3000/oauth2/redirect
       - https://bloggios.com/oauth2/redirect
       - https://bloggios.cloud/oauth2/redirect
 
@@ -124,11 +108,6 @@ management:
     web:
       exposure:
         include: prometheus
-
-logging:
-  level:
-    root: ${LOGGING_LEVEL:info}
-  config: classpath:logback/auth-provider.xml
 
 auth-provider:
   kafka:

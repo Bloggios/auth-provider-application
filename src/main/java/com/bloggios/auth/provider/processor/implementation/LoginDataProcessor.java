@@ -27,7 +27,6 @@ import com.bloggios.auth.provider.authentication.UserPrincipal;
 import com.bloggios.auth.provider.constants.ExceptionCodes;
 import com.bloggios.auth.provider.exception.payloads.AuthenticationException;
 import com.bloggios.auth.provider.properties.AuthServerProperties;
-import com.bloggios.auth.provider.utils.JwtDecoderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;

@@ -23,19 +23,13 @@
 
 package com.bloggios.auth.provider.processor.implementation;
 
-import com.bloggios.auth.provider.constants.EnvironmentConstants;
 import com.bloggios.auth.provider.dao.implementation.pgsqlimplementation.RoleDao;
-import com.bloggios.auth.provider.dao.repository.postgres.PgSqlRoleRepository;
 import com.bloggios.auth.provider.modal.RoleEntity;
 import com.bloggios.auth.provider.payload.RolePayload;
 import com.bloggios.auth.provider.processor.VoidProcess;
-import com.bloggios.auth.provider.properties.AuthServerProperties;
 import com.bloggios.auth.provider.properties.FetchRoleProperties;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

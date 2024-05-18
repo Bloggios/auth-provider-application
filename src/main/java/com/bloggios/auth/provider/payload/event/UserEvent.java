@@ -25,17 +25,13 @@ package com.bloggios.auth.provider.payload.event;
 
 import com.bloggios.auth.provider.enums.EventType;
 import com.bloggios.auth.provider.enums.Provider;
-import com.bloggios.auth.provider.modal.RoleEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Owner - Rohit Parihar

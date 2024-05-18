@@ -25,10 +25,8 @@ package com.bloggios.auth.provider.modal;
 
 import com.bloggios.auth.provider.constants.ServiceConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jdk.jfr.Unsigned;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.Date;

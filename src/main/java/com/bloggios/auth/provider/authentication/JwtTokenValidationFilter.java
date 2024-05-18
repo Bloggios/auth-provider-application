@@ -27,12 +27,8 @@ import com.bloggios.auth.provider.constants.ServiceConstants;
 import com.bloggios.auth.provider.payload.response.JwtErrorResponse;
 import com.bloggios.auth.provider.utils.JwtDecoderUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.NonNullApi;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,7 +49,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Owner - Rohit Parihar

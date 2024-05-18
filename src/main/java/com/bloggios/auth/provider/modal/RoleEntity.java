@@ -26,8 +26,9 @@ package com.bloggios.auth.provider.modal;
 import com.bloggios.auth.provider.constants.ServiceConstants;
 import lombok.*;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Owner - Rohit Parihar

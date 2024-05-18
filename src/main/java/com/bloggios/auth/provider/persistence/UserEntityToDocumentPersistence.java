@@ -30,8 +30,6 @@ import com.bloggios.auth.provider.modal.UserEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 /**
  * Owner - Rohit Parihar and Bloggios
  * Author - rohit

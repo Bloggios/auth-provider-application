@@ -29,6 +29,7 @@ import com.bloggios.auth.provider.constants.ServiceConstants;
 import com.bloggios.auth.provider.exception.payloads.AuthenticationException;
 import com.bloggios.auth.provider.properties.AuthServerProperties;
 import com.bloggios.auth.provider.utils.CookieUtils;
+import com.bloggios.auth.provider.utils.IpUtils;
 import com.bloggios.auth.provider.utils.JwtTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -66,7 +67,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private static final Logger logger = LoggerFactory.getLogger(OAuth2AuthenticationSuccessHandler.class);
 
-    private final JwtTokenGenerator tokenProvider;
+    private final JwtTokenGenerator jwtTokenGenerator;
     private final AuthServerProperties authServerProperties;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final Environment environment;
@@ -94,8 +95,18 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        String accessToken = tokenProvider.generateAccessToken(authentication, origin, false);
-        String refreshToken = tokenProvider.generateRefreshToken(authentication, origin);
+        String remoteAddress = IpUtils.getRemoteAddress(request);
+        String accessToken = jwtTokenGenerator.generateAccessToken(
+                authentication,
+                getOrigin(request),
+                false,
+                remoteAddress
+        );
+        String refreshToken = jwtTokenGenerator.generateRefreshToken(
+                authentication,
+                getOrigin(request),
+                remoteAddress
+        );
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken)
@@ -121,5 +132,18 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     }
                     return false;
                 });
+    }
+
+    private String getOrigin(HttpServletRequest httpServletRequest) {
+        String origin = httpServletRequest.getHeader(ORIGIN);
+        if (ObjectUtils.isEmpty(httpServletRequest.getHeader(ORIGIN))) {
+            origin = ServiceConstants.LOCAL_ORIGIN;
+        }
+        return origin;
+    }
+
+    private boolean isLongToken(HttpServletRequest httpServletRequest) {
+        String origin = httpServletRequest.getHeader(ORIGIN);
+        return ObjectUtils.isEmpty(origin);
     }
 }

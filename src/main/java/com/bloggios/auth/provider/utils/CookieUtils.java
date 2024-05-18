@@ -23,8 +23,6 @@
 
 package com.bloggios.auth.provider.utils;
 
-import com.bloggios.auth.provider.constants.ExceptionCodes;
-import com.bloggios.auth.provider.exception.payloads.AuthenticationException;
 import lombok.experimental.UtilityClass;
 import org.springframework.util.SerializationUtils;
 

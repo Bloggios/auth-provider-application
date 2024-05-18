@@ -24,8 +24,6 @@
 package com.bloggios.auth.provider.authentication;
 
 import com.bloggios.auth.provider.constants.ExceptionCodes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;

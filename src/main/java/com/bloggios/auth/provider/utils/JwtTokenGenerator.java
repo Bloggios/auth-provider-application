@@ -26,8 +26,6 @@ package com.bloggios.auth.provider.utils;
 import com.bloggios.auth.provider.authentication.UserPrincipal;
 import com.bloggios.auth.provider.constants.EnvironmentConstants;
 import com.bloggios.auth.provider.constants.ServiceConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,8 +38,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
-
-import static com.bloggios.auth.provider.constants.ServiceConstants.ORIGIN;
 
 /**
  * Owner - Rohit Parihar

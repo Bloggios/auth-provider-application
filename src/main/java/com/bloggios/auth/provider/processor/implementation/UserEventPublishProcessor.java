@@ -23,7 +23,6 @@
 
 package com.bloggios.auth.provider.processor.implementation;
 
-import com.bloggios.auth.provider.document.UserDocument;
 import com.bloggios.auth.provider.enums.EventType;
 import com.bloggios.auth.provider.kafka.producer.producers.UserEventKafkaProducer;
 import com.bloggios.auth.provider.modal.UserEntity;

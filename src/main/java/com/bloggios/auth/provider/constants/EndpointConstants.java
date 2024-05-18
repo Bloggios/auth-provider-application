@@ -25,8 +25,6 @@ package com.bloggios.auth.provider.constants;
 
 import lombok.experimental.UtilityClass;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
  * Owner - Rohit Parihar
  * Author - rohit

@@ -23,7 +23,6 @@
 
 package com.bloggios.auth.provider.dao.repository.postgres;
 
-import com.bloggios.auth.provider.dao.implementation.pgsqlimplementation.RefreshTokenDao;
 import com.bloggios.auth.provider.modal.RefreshTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

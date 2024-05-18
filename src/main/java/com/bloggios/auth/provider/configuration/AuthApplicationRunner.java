@@ -24,7 +24,6 @@
 package com.bloggios.auth.provider.configuration;
 
 import com.bloggios.auth.provider.processor.implementation.RoleProcessor;
-import com.bloggios.auth.provider.processor.implementation.SuperUserGenerator;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;

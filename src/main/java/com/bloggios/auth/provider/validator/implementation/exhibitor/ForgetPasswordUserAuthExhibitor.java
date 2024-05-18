@@ -27,8 +27,8 @@ import com.bloggios.auth.provider.constants.ExceptionCodes;
 import com.bloggios.auth.provider.enums.Provider;
 import com.bloggios.auth.provider.exception.payloads.BadRequestException;
 import com.bloggios.auth.provider.modal.UserEntity;
-import com.bloggios.auth.provider.validator.implementation.businessvalidator.UserAuthEntityBooleanTypeValidator;
 import com.bloggios.auth.provider.validator.Exhibitor;
+import com.bloggios.auth.provider.validator.implementation.businessvalidator.UserAuthEntityBooleanTypeValidator;
 import org.springframework.stereotype.Component;
 
 /**
