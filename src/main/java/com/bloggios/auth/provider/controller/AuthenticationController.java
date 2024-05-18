@@ -61,6 +61,11 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
+    @PostMapping(EndpointConstants.AuthenticationController.REGISTER_PATH)
+    public ResponseEntity<ModuleResponse> registerUser(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+        return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.registerUser(registerRequest, request)));
+    }
+
     @PostMapping(EndpointConstants.AuthenticationController.LOGIN_PATH)
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         CompletableFuture<AuthResponse> authenticate = authenticationService.authenticate(authenticationRequest, httpServletRequest, httpServletResponse);
@@ -112,11 +117,6 @@ public class AuthenticationController {
         AuthResponse response = AsyncUtils.getAsyncResult(authenticationService.refreshTokenSocial(token, httpServletResponse, httpServletRequest));
         httpServletResponse.addCookie(response.getCookie());
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping(EndpointConstants.AuthenticationController.REGISTER_PATH)
-    public ResponseEntity<ModuleResponse> registerUser(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
-        return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.registerUser(registerRequest, request)));
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.FORGET_PASSWORD_OTP_PATH)

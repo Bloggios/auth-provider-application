@@ -95,7 +95,7 @@ public class UserEntity {
 
     private boolean isProfileAdded;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name = "UserEntity", referencedColumnName = "userId"), inverseJoinColumns = @JoinColumn(name = "RoleEntity", referencedColumnName = "roleId"))
     private List<RoleEntity> roles = new ArrayList<>();
 

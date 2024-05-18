@@ -242,7 +242,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         long startTime = System.currentTimeMillis();
         authenticationRequestValidator.validate(authenticationRequest);
         Authentication userAuthentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getEmail(),
+                        authenticationRequest.getEntrypoint(),
                         authenticationRequest.getPassword()
                 )
         );
@@ -261,6 +261,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
      */
     @Override
     @Async(BeanConstants.ASYNC_TASK_EXTERNAL_POOL)
+    @Transactional
     public CompletableFuture<ModuleResponse> verifyOtp(String otp, String userId) {
         long startTime = System.currentTimeMillis();
         ValueCheckerUtil.isValidUUID(userId);
@@ -376,7 +377,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
     @Async(BeanConstants.ASYNC_TASK_EXTERNAL_POOL)
     public CompletableFuture<ModuleResponse> otpRedirectUserId(AuthenticationRequest authenticationRequest) {
         long startTime = System.currentTimeMillis();
-        Optional<UserDocument> byEmail = userAuthRepository.findByEmail(authenticationRequest.getEmail());
+        Optional<UserDocument> byEmail = userAuthRepository.findByEmail(authenticationRequest.getEntrypoint());
         if (byEmail.isEmpty()) throw new AuthenticationException(ExceptionCodes.USER_NOT_FOUND_WITH_EMAIL);
         UserDocument userAuth = byEmail.get();
         if (!passwordEncoder.matches(authenticationRequest.getPassword(), userAuth.getPassword()))

@@ -43,6 +43,6 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthenticationRequest {
 
-    private String email;
+    private String entrypoint;
     private String password;
 }

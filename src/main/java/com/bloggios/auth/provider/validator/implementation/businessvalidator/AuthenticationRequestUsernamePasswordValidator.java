@@ -47,7 +47,9 @@ public class AuthenticationRequestUsernamePasswordValidator implements BusinessV
 
     @Override
     public void validate(AuthenticationRequest authenticationRequest) {
-        validateEmail(authenticationRequest.getEmail());
+        if (authenticationRequest.getEntrypoint().contains("@")) {
+            validateEmail(authenticationRequest.getEntrypoint());
+        }
         validatePassword(authenticationRequest.getPassword());
     }
 
