@@ -56,7 +56,7 @@ public class ServiceConstants {
     public static final String DEFAULT_AUTOCOMPLETE = "default_autocomplete_text";
     public static final String DATE_REGISTERED = "dateRegistered";
     public static final String STRING = "String";
-    public static final String USER_TABLE = "user";
+    public static final String USER_TABLE = "user_entity";
     public static final String ROLE_ENTITY_TABLE_NAME = "role";
     public static final String SEARCH_PREFIX_ES_QUERY = "search_";
     public static final String FILTER_PREFIX_ES_QUERY = "filter_";

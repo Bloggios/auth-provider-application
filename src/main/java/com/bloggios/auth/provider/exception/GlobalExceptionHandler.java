@@ -100,7 +100,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ExceptionResponse> handleAuthenticationException(AuthenticationException exception) {
         ExceptionResponse exceptionResponse = fetchErrorProperties.exceptionResponse(HttpStatus.UNAUTHORIZED, exception.getCode());
-        if (Objects.nonNull(exceptionResponse.getMessage())) {
+        if (Objects.nonNull(exception.getMessage())) {
             exceptionResponse = fetchErrorProperties.generateExceptionResponse(HttpStatus.UNAUTHORIZED, exception.getMessage(), exception.getCode());
         }
         logger.error("""

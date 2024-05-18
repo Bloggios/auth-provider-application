@@ -129,7 +129,6 @@ authentication:
     public-key: ${PUBLIC_KEY:classpath:security/pubkey.pem}
   path-exclude:
     paths:
-      - /auth-provider/v1.0/user-auth/auth/**
-      - /auth-provider/v1.0/authentication/**
+      - /auth-provider/auth/**
       - /actuator/**
       - /oauth2/**
