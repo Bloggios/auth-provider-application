@@ -113,7 +113,7 @@ auth-provider:
   kafka:
     producer:
       topics:
-        otp-payload: ${ACTIVE_PROFILE:local}.auth-provider.otp
+        registration-otp: ${ACTIVE_PROFILE:local}.auth-provider.registration-otp
         password-changed: ${ACTIVE_PROFILE:local}.auth-provider.password-changed
         forget-password: ${ACTIVE_PROFILE:local}.auth-provider.forget-password
         user: ${ACTIVE_PROFILE:local}.auth-provider.user

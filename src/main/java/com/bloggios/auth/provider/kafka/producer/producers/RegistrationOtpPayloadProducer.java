@@ -51,6 +51,6 @@ public class RegistrationOtpPayloadProducer extends MessageProducer<OtpDataPaylo
 
     @Override
     public String setTopic() {
-        return environment.getProperty(EnvironmentConstants.OTP_PAYLOAD_TOPIC);
+        return environment.getProperty(EnvironmentConstants.REGISTRTATION_OTP_TOPIC);
     }
 }

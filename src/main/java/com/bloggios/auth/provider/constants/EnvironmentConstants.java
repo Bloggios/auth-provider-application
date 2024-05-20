@@ -39,7 +39,7 @@ public class EnvironmentConstants {
 
     public static final String APPLICATION_VERSION = "application.version";
     public static final String APPLICATION_PROVIDER = "application.email-provider";
-    public static final String OTP_PAYLOAD_TOPIC = "auth-provider.kafka.producer.topics.otp-payload";
+    public static final String REGISTRTATION_OTP_TOPIC = "auth-provider.kafka.producer.topics.registration-otp";
     public static final String KAFKA_GROUP_ID = "auth-provider.kafka.group-id";
     public static final String ES_SERVER = "elasticsearch.server";
     public static final String ES_USERNAME = "elasticsearch.username";

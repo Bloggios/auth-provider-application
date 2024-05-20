@@ -46,6 +46,4 @@ public class OtpDataPayload {
 
     private String otp;
     private String email;
-    private String mobileNumber;
-    private NotifyThrough notifyThrough;
 }

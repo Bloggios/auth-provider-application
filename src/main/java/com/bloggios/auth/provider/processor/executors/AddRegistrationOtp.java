@@ -62,7 +62,7 @@ public class AddRegistrationOtp {
     public void sendOtpMessage(UserEntity userAuth, Integer timesSent) {
         RegistrationOtpDocument registrationOtp = otpGenerator.registrationOtpSupplier(userAuth);
         registrationOtp.setTimesSent(timesSent);
-        OtpDataPayload otpPayload = OtpDataPayload.builder().otp(registrationOtp.getOtp()).email(userAuth.getEmail()).notifyThrough(NotifyThrough.EMAIL).build();
+        OtpDataPayload otpPayload = OtpDataPayload.builder().otp(registrationOtp.getOtp()).email(userAuth.getEmail()).build();
         registrationOtpPayloadProducer.sendMessage(otpPayload);
         registrationOtpRepository.save(registrationOtp);
     }
@@ -70,7 +70,7 @@ public class AddRegistrationOtp {
     public void sendOtpMessage(UserDocument userAuth, Integer timesSent) {
         RegistrationOtpDocument registrationOtp = otpGenerator.registrationOtpSupplier(userAuth);
         registrationOtp.setTimesSent(timesSent);
-        OtpDataPayload otpPayload = OtpDataPayload.builder().otp(registrationOtp.getOtp()).email(userAuth.getEmail()).notifyThrough(NotifyThrough.EMAIL).build();
+        OtpDataPayload otpPayload = OtpDataPayload.builder().otp(registrationOtp.getOtp()).email(userAuth.getEmail()).build();
         registrationOtpPayloadProducer.sendMessage(otpPayload);
         registrationOtpRepository.save(registrationOtp);
     }
