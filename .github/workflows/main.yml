@@ -65,7 +65,7 @@ jobs:
             cp /root/secrets/logback/auth-logback.xml /root/microservices/auth-provider-application/src/main/resources
 
       - name: Add Keys
-        uses: appleby/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.V4_HOST }}
           username: ${{ secrets.V4_USERNAME }}
