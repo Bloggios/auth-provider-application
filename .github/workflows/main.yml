@@ -1,4 +1,4 @@
-name: auth-provider-application devsandbox
+name: question-provider-application production
 
 on:
   push:
@@ -29,57 +29,6 @@ jobs:
 #      - name: Build with Maven
 #        run: mvn clean install
 
-      - name: Cleaning Docker File
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.V4_HOST }}
-          username: ${{ secrets.V4_USERNAME }}
-          password: ${{ secrets.V4_VPS_PRIVATE_KEY }}
-          port: 22
-          script: |
-            echo "${{secrets.V4_HOST}}"
-            cd /root/bloggios-deployment-docker-files
-            git stash
-            git pull origin main
-
-      - name: Cleaning File
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.V4_HOST }}
-          username: ${{ secrets.V4_USERNAME }}
-          password: ${{ secrets.V4_VPS_PRIVATE_KEY }}
-          port: 22
-          script: |
-            cd /root/microservices/auth-provider-application
-            git stash
-            git pull origin main
-
-      - name: Add Logback File
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.V4_HOST }}
-          username: ${{ secrets.V4_USERNAME }}
-          key: ${{ secrets.V4_VPS_PRIVATE_KEY }}
-          port: 22
-          script: |
-            rm /root/microservices/auth-provider-application/src/main/resources/auth-logback.xml
-            cp /root/secrets/logback/auth-logback.xml /root/microservices/auth-provider-application/src/main/resources
-
-      - name: Add Keys
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.V4_HOST }}
-          username: ${{ secrets.V4_USERNAME }}
-          key: ${{ secrets.V4_VPS_PRIVATE_KEY }}
-          port: 22
-          script: |
-            set +e
-            rm /root/microservices/auth-provider-application/src/main/resources/security/privkey.pem
-            /root/microservices/auth-provider-application/src/main/resources/security/pubkey.pem
-            set -e
-            cp /root/secrets/certificates/privkey.pem /root/microservices/auth-provider-application/src/main/resources/security
-            cp /root/secrets/certificates/pubkey.pem /root/microservices/auth-provider-application/src/main/resources/security
-
       - name: Stopping Container
         uses: appleboy/ssh-action@master
         with:
@@ -89,43 +38,45 @@ jobs:
           port: 22
           script: |
             cd /root/bloggios-deployment-docker-files
+            git stash
+            git pull origin main
             set +e
-            docker-compose -f docker-compose-devsandbox.yml stop auth-provider-application
-            docker-compose -f docker-compose-devsandbox.yml stop auth-provider-social-application
-            docker rmi -f auth-provider-application:1.0
+            docker-compose -f docker-compose-production.yml stop question-provider-application
+            docker rmi question-provider-application:1.0
             set -e
 
-      - name: Generating Docker Image
+      - name: Generating Docker Image for Bloggios
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.V4_HOST }}
-          username: ${{ secrets.V4_USERNAME }}
-          key: ${{ secrets.V4_VPS_PRIVATE_KEY }}
+          host: ${{ secrets.V8_HOST }}
+          username: ${{ secrets.V8_USERNAME }}
+          key: ${{ secrets.V8_VPS_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /root/microservices/auth-provider-application
+            cd /root/microservices/question-provider-application
+            git stash
+            git pull origin main
             chmod +x mvnw
             ./mvnw clean package
 
       - name: Deploy Docker Image
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.V4_HOST }}
-          username: ${{ secrets.V4_USERNAME }}
-          key: ${{ secrets.V4_VPS_PRIVATE_KEY }}
+          host: ${{ secrets.V8_HOST }}
+          username: ${{ secrets.V8_USERNAME }}
+          key: ${{ secrets.V8_VPS_PRIVATE_KEY }}
           port: 22
           script: |
             cd /root/bloggios-deployment-docker-files
-            docker-compose -f docker-compose-devsandbox.yml up -d auth-provider-application
-            docker-compose -f docker-compose-devsandbox.yml up -d auth-provider-social-application
+            docker-compose -f docker-compose-production.yml up -d question-provider-application
 
-      - name: Cleaning Targets
+      - name: Removing Targets
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.V4_HOST }}
-          username: ${{ secrets.V4_USERNAME }}
-          key: ${{ secrets.V4_VPS_PRIVATE_KEY }}
+          host: ${{ secrets.V8_HOST }}
+          username: ${{ secrets.V8_USERNAME }}
+          key: ${{ secrets.V8_VPS_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /root/microservices/auth-provider-application
+            cd /root/microservices/question-provider-application
             rm target -r
