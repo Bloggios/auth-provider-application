@@ -37,6 +37,7 @@ jobs:
           password: ${{ secrets.V4_VPS_PRIVATE_KEY }}
           port: 22
           script: |
+            echo "${{secrets.V4_HOST}}"
             cd /root/bloggios-deployment-docker-files
             git stash
             git pull origin main
