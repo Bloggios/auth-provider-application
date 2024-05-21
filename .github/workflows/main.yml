@@ -76,8 +76,8 @@ jobs:
             rm /root/microservices/auth-provider-application/src/main/resources/security/privkey.pem
             /root/microservices/auth-provider-application/src/main/resources/security/pubkey.pem
             set -e
-            cp /root/spring-boot/certificates/privkey.pem /root/microservices/auth-provider-application/src/main/resources/security
-            cp /root/spring-boot/certificates/pubkey.pem /root/microservices/auth-provider-application/src/main/resources/security
+            cp /root/secrets/certificates/privkey.pem /root/microservices/auth-provider-application/src/main/resources/security
+            cp /root/secrets/certificates/pubkey.pem /root/microservices/auth-provider-application/src/main/resources/security
 
       - name: Stopping Container
         uses: appleboy/ssh-action@master
