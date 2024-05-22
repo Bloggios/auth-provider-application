@@ -28,6 +28,7 @@ import com.bloggios.auth.provider.payload.request.AssignRoleRequest;
 import com.bloggios.auth.provider.payload.request.ChangePasswordRequest;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
 import com.bloggios.auth.provider.payload.response.UserAuthResponse;
+import com.bloggios.auth.provider.payload.response.UserProfileResponse;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -45,4 +46,5 @@ public interface UserService {
     CompletableFuture<UserAuthResponse> getLoggedInUser(UserPrincipal userPrincipal);
     CompletableFuture<ModuleResponse> changePassword(ChangePasswordRequest changePasswordRequest, UserPrincipal userPrincipal);
     CompletableFuture<ModuleResponse> assignRoles(AssignRoleRequest assignRoleRequest, UserPrincipal authenticatedUser);
+    CompletableFuture<UserProfileResponse> getUserProfileResponse(UserPrincipal userPrincipal);
 }

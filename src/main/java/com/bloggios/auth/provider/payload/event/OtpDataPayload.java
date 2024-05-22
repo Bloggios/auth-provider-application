@@ -23,7 +23,6 @@
 
 package com.bloggios.auth.provider.payload.event;
 
-import com.bloggios.auth.provider.enums.NotifyThrough;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

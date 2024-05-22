@@ -21,88 +21,32 @@
  * limitations under the License.
  */
 
-package com.bloggios.auth.provider.modal;
+package com.bloggios.auth.provider.payload.response;
 
-import com.bloggios.auth.provider.constants.ServiceConstants;
-import com.bloggios.auth.provider.enums.Provider;
 import com.bloggios.auth.provider.enums.UserBadge;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
- * Owner - Rohit Parihar
+ * Owner - Rohit Parihar and Bloggios
  * Author - rohit
  * Project - auth-provider-application
- * Package - com.bloggios.auth.provider.modal
- * Created_on - 29 November-2023
- * Created_at - 16 : 12
+ * Package - com.bloggios.auth.provider.payload.response
+ * Created_on - May 22 - 2024
+ * Created_at - 22:33
  */
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = ServiceConstants.USER_TABLE)
-public class UserEntity {
+public class UserProfileResponse {
 
-    @Id
-    @GeneratedValue(generator = ServiceConstants.RANDOM_UUID)
-    @GenericGenerator(name = ServiceConstants.RANDOM_UUID, strategy = ServiceConstants.UUID_STRATEGY)
     private String userId;
-
-    @Column(unique = true, nullable = false)
     private String email;
-
-    @Column(unique = true)
     private String username;
-    private String password;
-
-
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
-    private String providerId;
-
-    private String apiVersion;
-    private String version;
-    private int timesDisabled = 0;
-
-    private boolean isEnabled;
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateRegistered;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateEnabled;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdated;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastPasswordChanged;
-
-    private String remoteAddress;
-
-    private boolean isProfileAdded;
-
-    @Enumerated(EnumType.STRING)
-    private UserBadge userBadge;
-
     private boolean isBadge;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(joinColumns = @JoinColumn(name = "UserEntity", referencedColumnName = "userId"), inverseJoinColumns = @JoinColumn(name = "RoleEntity", referencedColumnName = "roleId"))
-    private List<RoleEntity> roles = new ArrayList<>();
-
+    private UserBadge userBadge;
 }

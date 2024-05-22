@@ -26,7 +26,6 @@ package com.bloggios.auth.provider.processor.executors;
 import com.bloggios.auth.provider.dao.repository.elasticsearch.EsRegistrationOtpRepository;
 import com.bloggios.auth.provider.document.RegistrationOtpDocument;
 import com.bloggios.auth.provider.document.UserDocument;
-import com.bloggios.auth.provider.enums.NotifyThrough;
 import com.bloggios.auth.provider.kafka.producer.producers.RegistrationOtpPayloadProducer;
 import com.bloggios.auth.provider.modal.UserEntity;
 import com.bloggios.auth.provider.payload.event.OtpDataPayload;

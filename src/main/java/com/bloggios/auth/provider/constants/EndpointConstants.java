@@ -63,5 +63,6 @@ public class EndpointConstants {
         public static final String BASE_PATH = CONTEXT_PATH + "/user";
         public static final String CHANGE_PASSWORD = "/change-password";
         public static final String ASSIGN_ROLES = "/assign-roles";
+        public static final String GET_USER_PROFILE_RESPONSE = "/user-profile-response";
     }
 }

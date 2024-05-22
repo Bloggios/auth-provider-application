@@ -36,6 +36,7 @@ import com.bloggios.auth.provider.payload.request.AssignRoleRequest;
 import com.bloggios.auth.provider.payload.request.ChangePasswordRequest;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
 import com.bloggios.auth.provider.payload.response.UserAuthResponse;
+import com.bloggios.auth.provider.payload.response.UserProfileResponse;
 import com.bloggios.auth.provider.processor.elasticprocessor.EsUserAuthPersistProcessor;
 import com.bloggios.auth.provider.processor.implementation.AssignRoleProcessor;
 import com.bloggios.auth.provider.processor.pgsqlprocessor.PgSqlUserAuthPersist;
@@ -99,6 +100,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
+    @Async(BeanConstants.ASYNC_TASK_EXTERNAL_POOL)
     public CompletableFuture<ModuleResponse> changePassword(ChangePasswordRequest changePasswordRequest, UserPrincipal userPrincipal) {
         changePasswordRequestExhibitor.validate(changePasswordRequest);
         UserDocument userDocument = userDocumentDao.findById(userPrincipal.getUserId());
@@ -118,6 +120,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
+    @Async(BeanConstants.ASYNC_TASK_EXTERNAL_POOL)
     public CompletableFuture<ModuleResponse> assignRoles(AssignRoleRequest assignRoleRequest, UserPrincipal authenticatedUser) {
         UserEntity userAuth = userEntityDao.findById(assignRoleRequest.getAssignee())
                 .orElseThrow(() -> new BadRequestException(ExceptionCodes.USER_NOT_FOUND));
@@ -131,6 +134,23 @@ public class UserServiceImplementation implements UserService {
                         .builder()
                         .message(ResponseMessageConstants.ROLES_ASSIGNED_SUCCESSFULLY)
                         .userId(authenticatedUser.getUserId())
+                        .build()
+        );
+    }
+
+    @Override
+    @Async(BeanConstants.ASYNC_TASK_EXTERNAL_POOL)
+    public CompletableFuture<UserProfileResponse> getUserProfileResponse(UserPrincipal userPrincipal) {
+        String userId = userPrincipal.getUserId();
+        UserDocument user = userDocumentDao.findById(userId);
+        return CompletableFuture.completedFuture(
+                UserProfileResponse
+                        .builder()
+                        .userId(user.getUserId())
+                        .email(user.getEmail())
+                        .username(user.getUsername())
+                        .isBadge(user.isBadge())
+                        .userBadge(user.getUserBadge())
                         .build()
         );
     }

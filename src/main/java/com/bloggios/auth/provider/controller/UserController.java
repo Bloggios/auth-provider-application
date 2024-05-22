@@ -29,6 +29,7 @@ import com.bloggios.auth.provider.payload.request.AssignRoleRequest;
 import com.bloggios.auth.provider.payload.request.ChangePasswordRequest;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
 import com.bloggios.auth.provider.payload.response.UserAuthResponse;
+import com.bloggios.auth.provider.payload.response.UserProfileResponse;
 import com.bloggios.auth.provider.service.UserService;
 import com.bloggios.auth.provider.utils.AsyncUtils;
 import org.springframework.http.ResponseEntity;
@@ -69,5 +70,14 @@ public class UserController {
     @PostMapping(EndpointConstants.UserController.ASSIGN_ROLES)
     public ResponseEntity<ModuleResponse> assignRole(@RequestBody AssignRoleRequest assignRoleRequest, @AuthenticationPrincipal UserPrincipal authenticatedUser) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(userService.assignRoles(assignRoleRequest, authenticatedUser)));
+    }
+
+    /**
+     * Internal API
+     * To be called through Feign Client
+     */
+    @GetMapping(EndpointConstants.UserController.GET_USER_PROFILE_RESPONSE)
+    public ResponseEntity<UserProfileResponse> getUserProfileResponse(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return ResponseEntity.ok(AsyncUtils.getAsyncResult(userService.getUserProfileResponse(userPrincipal)));
     }
 }

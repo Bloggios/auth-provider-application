@@ -26,6 +26,7 @@ package com.bloggios.auth.provider.document;
 import com.bloggios.auth.provider.constants.EnvironmentConstants;
 import com.bloggios.auth.provider.constants.ServiceConstants;
 import com.bloggios.auth.provider.document.embedded.Role;
+import com.bloggios.auth.provider.enums.UserBadge;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -176,6 +177,17 @@ public class UserDocument {
             type = FieldType.Boolean
     )
     private boolean isProfileAdded;
+
+    @Field(
+            type = FieldType.Keyword,
+            normalizer = ServiceConstants.DEFAULT_NORMALIZER
+    )
+    private UserBadge userBadge;
+
+    @Field(
+            type = FieldType.Boolean
+    )
+    private boolean isBadge;
 
     @Field(
             type = FieldType.Nested, 
