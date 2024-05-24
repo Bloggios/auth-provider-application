@@ -47,7 +47,7 @@ public class ResendOtpExhibitor {
         if (Boolean.TRUE.equals(userAuth.isEnabled())) {
             throw new BadRequestException(ExceptionCodes.USER_ALREADY_ENABLED);
         }
-        if (!userAuth.getProvider().equals(Provider.email.name())) {
+        if (!userAuth.getProvider().equals(Provider.email)) {
             throw new BadRequestException(ExceptionCodes.PROVIDER_NOT_EMAIL);
         }
     }
