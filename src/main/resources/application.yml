@@ -45,7 +45,7 @@ spring:
 
 application:
   version: @version@
-  email-provider: ${EMAIL_PROVIDER_ID:BG-AUTH-LOCAL-EMAIL-1}
+  email-provider: BG-AUTH-LOCAL-EMAIL-1
   profile: ${ACTIVE_PROFILE}
 
 elasticsearch:

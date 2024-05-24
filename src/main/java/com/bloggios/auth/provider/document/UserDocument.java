@@ -26,6 +26,7 @@ package com.bloggios.auth.provider.document;
 import com.bloggios.auth.provider.constants.EnvironmentConstants;
 import com.bloggios.auth.provider.constants.ServiceConstants;
 import com.bloggios.auth.provider.document.embedded.Role;
+import com.bloggios.auth.provider.enums.Provider;
 import com.bloggios.auth.provider.enums.UserBadge;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -108,7 +109,7 @@ public class UserDocument {
             type = FieldType.Keyword,
             normalizer = ServiceConstants.DEFAULT_NORMALIZER
     )
-    private String provider;
+    private Provider provider;
 
     @Field(
             type = FieldType.Keyword,
