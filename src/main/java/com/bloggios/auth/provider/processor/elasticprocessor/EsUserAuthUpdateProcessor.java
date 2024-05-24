@@ -54,7 +54,7 @@ public class EsUserAuthUpdateProcessor {
 
     public void process(UserEntity userEntity) {
         UserDocument userDocument = modelMapper.map(userEntity, UserDocument.class);
-        userDocument.setProvider(userEntity.getProvider().name());
+        userDocument.setProvider(userEntity.getProvider());
         userDocumentDao.updateUser(userDocument);
     }
 }
