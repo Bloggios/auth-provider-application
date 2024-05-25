@@ -546,7 +546,8 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
                     .httpOnly(!origin.contains("localhost:"))
                     .maxAge(86400)
                     .path("/")
-                    .sameSite("none")
+                    .sameSite("None")
+                    .secure(true)
                     .build();
             authResponse.setCookie(cookie);
         }
