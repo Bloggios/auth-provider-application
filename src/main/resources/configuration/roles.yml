@@ -15,3 +15,9 @@ roles:
     admin:
       id: admin
       name: ROLE_ADMIN
+    postman:
+      id: postman
+      name: ROLE_POSTMAN
+    devsandbox:
+      id: devsandbox
+      name: ROLE_DEVSANDBOX

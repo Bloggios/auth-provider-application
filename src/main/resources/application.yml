@@ -83,7 +83,6 @@ auth-server:
         origin-name: http://localhost:2000
         must-roles:
           - ROLE_DEVELOPER
-          - ROLE_POSTMAN
   OAuth2:
     authorized-redirect-uris:
       - http://localhost:3000/oauth2/redirect
