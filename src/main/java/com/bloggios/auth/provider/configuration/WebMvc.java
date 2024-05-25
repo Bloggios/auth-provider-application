@@ -50,8 +50,7 @@ public class WebMvc {
         corsConfig.setAllowedOrigins(List.of(
                 "http://localhost:3000",
                 "https://bloggios.com",
-                "https://bloggios.cloud",
-                "https://www.bloggios.cloud",
+                "https://dev.bloggios.in",
                 "https://www.bloggios.com"
         ));
         corsConfig.setMaxAge(3600L);

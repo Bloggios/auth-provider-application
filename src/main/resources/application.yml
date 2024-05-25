@@ -62,12 +62,7 @@ auth-server:
     cookie-name: bloggios-auth
     roles-to-allow:
       devsandbox:
-        origin-name: https://bloggios.cloud
-        must-roles:
-          - ROLE_DEVSANDBOX
-          - ROLE_DEVELOPER
-      devsandbox-protocol:
-        origin-name: https://www.bloggios.cloud
+        origin-name: https://api.bloggios.in
         must-roles:
           - ROLE_DEVSANDBOX
           - ROLE_DEVELOPER
