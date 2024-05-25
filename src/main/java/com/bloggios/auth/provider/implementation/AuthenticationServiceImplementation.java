@@ -76,6 +76,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -540,10 +541,14 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         ));
         if (Objects.nonNull(refreshToken)) {
             String origin = httpServletRequest.getHeader(ORIGIN);
+            boolean isHttpOnly = true;
+            if (StringUtils.hasText(origin)) {
+                isHttpOnly = !origin.contains("localhost:");
+            }
             assert cookieName != null;
             ResponseCookie cookie = ResponseCookie
                     .from(cookieName, refreshToken)
-                    .httpOnly(!origin.contains("localhost:"))
+                    .httpOnly(isHttpOnly)
                     .maxAge(86400)
                     .path("/")
                     .sameSite("None")
