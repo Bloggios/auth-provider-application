@@ -32,6 +32,7 @@ import com.bloggios.auth.provider.payload.response.AuthResponse;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
 import com.bloggios.auth.provider.service.AuthenticationService;
 import com.bloggios.auth.provider.utils.AsyncUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,8 +71,10 @@ public class AuthenticationController {
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         CompletableFuture<AuthResponse> authenticate = authenticationService.authenticate(authenticationRequest, httpServletRequest, httpServletResponse);
         AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);
-        if (Objects.nonNull(asyncResult.getCookie())) httpServletResponse.addCookie(asyncResult.getCookie());
-        return ResponseEntity.ok(asyncResult);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, asyncResult.getCookie().toString())
+                .body(asyncResult);
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.VERIFY_OTP)
@@ -87,7 +90,7 @@ public class AuthenticationController {
     @GetMapping(EndpointConstants.AuthenticationController.REFRESH_TOKEN)
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         AuthResponse response = AsyncUtils.getAsyncResult(authenticationService.refreshToken(httpServletRequest, httpServletResponse));
-        httpServletResponse.addCookie(response.getCookie());
+//        httpServletResponse.addCookie(response.getCookie());
         return ResponseEntity.ok(response);
     }
 
@@ -99,7 +102,7 @@ public class AuthenticationController {
     @GetMapping(EndpointConstants.AuthenticationController.LOGOUT)
     public ResponseEntity<AuthResponse> logoutUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         AuthResponse authResponse = AsyncUtils.getAsyncResult(authenticationService.logoutUser(httpServletRequest, httpServletResponse));
-        httpServletResponse.addCookie(authResponse.getCookie());
+//        httpServletResponse.addCookie(authResponse.getCookie());
         return ResponseEntity.ok(authResponse);
     }
 
@@ -115,7 +118,7 @@ public class AuthenticationController {
     @GetMapping(EndpointConstants.AuthenticationController.REFRESH_TOKEN_SOCIAL)
     public ResponseEntity<AuthResponse> refreshTokenSocial(@RequestParam String token, HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) {
         AuthResponse response = AsyncUtils.getAsyncResult(authenticationService.refreshTokenSocial(token, httpServletResponse, httpServletRequest));
-        httpServletResponse.addCookie(response.getCookie());
+//        httpServletResponse.addCookie(response.getCookie());
         return ResponseEntity.ok(response);
     }
 

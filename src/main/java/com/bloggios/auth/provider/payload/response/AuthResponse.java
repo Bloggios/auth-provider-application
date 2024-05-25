@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.http.ResponseCookie;
 
 import javax.servlet.http.Cookie;
 import java.util.List;
@@ -58,7 +59,7 @@ public class AuthResponse {
     private String message;
 
     @JsonIgnore
-    private Cookie cookie;
+    private ResponseCookie cookie;
 
     @JsonIgnore
     private String clientToken;

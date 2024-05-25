@@ -64,6 +64,7 @@ import com.bloggios.auth.provider.validator.implementation.exhibitor.ResendOtpEx
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseCookie;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -341,7 +342,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         cookie.setMaxAge(1);
         cookie.setPath("/");
         logger.info("Execution Time (Logout User) -> {}ms", System.currentTimeMillis() - startTime);
-        return CompletableFuture.completedFuture(AuthResponse.builder().cookie(cookie).build());
+        return CompletableFuture.completedFuture(AuthResponse.builder().build());
     }
 
     /**
@@ -539,10 +540,14 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         ));
         if (Objects.nonNull(refreshToken)) {
             String origin = httpServletRequest.getHeader(ORIGIN);
-            Cookie cookie = new Cookie(cookieName, refreshToken);
-            cookie.setHttpOnly(!origin.contains("localhost:"));
-            cookie.setMaxAge(86400);
-            cookie.setPath("/");
+            assert cookieName != null;
+            ResponseCookie cookie = ResponseCookie
+                    .from(cookieName, refreshToken)
+                    .httpOnly(!origin.contains("localhost:"))
+                    .maxAge(86400)
+                    .path("/")
+                    .sameSite("none")
+                    .build();
             authResponse.setCookie(cookie);
         }
         return authResponse;
@@ -557,7 +562,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
             CompletableFuture.completedFuture(
                     AuthResponse
                             .builder()
-                            .cookie(record.cookie())
+//                            .cookie(record.cookie())
                             .message(record.message())
                             .build()
             );
