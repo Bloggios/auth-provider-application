@@ -538,8 +538,9 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
                 remoteAddress
         ));
         if (Objects.nonNull(refreshToken)) {
+            String origin = httpServletRequest.getHeader(ORIGIN);
             Cookie cookie = new Cookie(cookieName, refreshToken);
-            cookie.setHttpOnly(true);
+            cookie.setHttpOnly(!origin.contains("localhost:"));
             cookie.setMaxAge(86400);
             cookie.setPath("/");
             authResponse.setCookie(cookie);
