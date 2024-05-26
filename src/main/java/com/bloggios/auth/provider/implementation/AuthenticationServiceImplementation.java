@@ -338,12 +338,23 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         String cookieName = environment.getProperty(EnvironmentConstants.REFRESH_TOKEN_COOKIE_NAME);
         Optional<Cookie> refreshTokenCookie = CookieUtils.getCookie(request, cookieName);
         CompletableFuture.runAsync(()-> logoutUserRefreshTokenValidationProcessor.process(refreshTokenCookie, request));
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(1);
-        cookie.setPath("/");
+        boolean isHttpOnly = true;
+        if (refreshTokenCookie.isPresent()) {
+            Cookie cookie = refreshTokenCookie.get();
+            isHttpOnly = cookie.isHttpOnly();
+        }
+        assert cookieName != null;
+        ResponseCookie cookie = ResponseCookie
+                .from(cookieName, null)
+                .httpOnly(isHttpOnly)
+                .maxAge(1)
+                .path("/")
+                .sameSite("None")
+                .secure(true)
+                .build();
+
         logger.info("Execution Time (Logout User) -> {}ms", System.currentTimeMillis() - startTime);
-        return CompletableFuture.completedFuture(AuthResponse.builder().build());
+        return CompletableFuture.completedFuture(AuthResponse.builder().cookie(cookie).build());
     }
 
     /**
@@ -575,7 +586,6 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         }
         String userId = jwtDecoderUtil.extractUserId(token);
         UserDetails userDetails = customUserDetailService.loadUserById(userId);
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        return authentication;
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

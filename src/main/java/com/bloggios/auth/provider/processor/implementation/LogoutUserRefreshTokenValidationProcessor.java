@@ -82,8 +82,11 @@ public class LogoutUserRefreshTokenValidationProcessor {
                         """, error);
             }
         }
+        String extractedUserId = jwtDecoderUtil.extractUserId(refreshToken);
         Optional<RefreshTokenEntity> refreshTokenOptional = refreshTokenDao.findByRefreshToken(refreshToken);
         if (refreshTokenOptional.isEmpty()) {
+            Optional<RefreshTokenEntity> byUserId = refreshTokenDao.findByUserId(extractedUserId);
+            byUserId.ifPresent(refreshTokenDao::deleteByEntity);
             logger.warn("""
                     Refresh Token Entity not found through Refresh Token
                     IP Address : {}
@@ -91,7 +94,7 @@ public class LogoutUserRefreshTokenValidationProcessor {
                     """, IpUtils.getRemoteAddress(httpServletRequest), new Date());
             return;
         }
-        String extractedUserId = jwtDecoderUtil.extractUserId(refreshToken);
+
         RefreshTokenEntity refreshTokenEntity = refreshTokenOptional.get();
         if (!extractedUserId.equals(refreshTokenEntity.getUserId())) {
             logger.error("""

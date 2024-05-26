@@ -65,6 +65,7 @@ public class RefreshTokenPersistence {
             String remoteAddress
     ) {
         Date date = new Date();
+        refreshTokenDao.deleteByUserId(userPrincipal.getUserId());
         RefreshTokenEntity refreshTokenEntity = RefreshTokenEntity
                 .builder()
                 .refreshToken(refreshToken)

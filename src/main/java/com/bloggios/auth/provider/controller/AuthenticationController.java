@@ -104,8 +104,10 @@ public class AuthenticationController {
     @GetMapping(EndpointConstants.AuthenticationController.LOGOUT)
     public ResponseEntity<AuthResponse> logoutUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         AuthResponse authResponse = AsyncUtils.getAsyncResult(authenticationService.logoutUser(httpServletRequest, httpServletResponse));
-//        httpServletResponse.addCookie(authResponse.getCookie());
-        return ResponseEntity.ok(authResponse);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, authResponse.getCookie().toString())
+                .body(authResponse);
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.USER_IP)

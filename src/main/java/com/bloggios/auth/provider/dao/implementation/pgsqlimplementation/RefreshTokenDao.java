@@ -53,4 +53,12 @@ public class RefreshTokenDao extends AbstractDao<RefreshTokenEntity, RefreshToke
     public void deleteByEntity(RefreshTokenEntity refreshTokenEntity) {
         repository.delete(refreshTokenEntity);
     }
+
+    public void deleteByUserId(String userId) {
+        repository.deleteByUserId(userId);
+    }
+
+    public Optional<RefreshTokenEntity> findByUserId(String userId) {
+        return repository.findByUserId(userId);
+    }
 }
