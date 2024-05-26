@@ -37,6 +37,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.util.AntPathMatcher;
 
 /**
  * Owner - Rohit Parihar
@@ -80,5 +81,10 @@ public class Beans {
                         .getKeyProvider()
                         .getPublicKey())
                 .build();
+    }
+
+    @Bean
+    public AntPathMatcher antPathMatcher() {
+        return new AntPathMatcher();
     }
 }

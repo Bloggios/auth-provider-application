@@ -32,12 +32,15 @@ import com.bloggios.auth.provider.payload.response.AuthResponse;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
 import com.bloggios.auth.provider.service.AuthenticationService;
 import com.bloggios.auth.provider.utils.AsyncUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -55,6 +58,9 @@ import java.util.concurrent.CompletableFuture;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+
+    @Autowired
+    private AntPathMatcher antPathMatcher;
 
     public AuthenticationController(
             AuthenticationService authenticationService
@@ -139,5 +145,13 @@ public class AuthenticationController {
     @GetMapping(EndpointConstants.AuthenticationController.REMOTE_ADDRESS)
     public ResponseEntity<RemoteAddressResponse> remoteAddress(HttpServletRequest request) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.remoteAddress(request)));
+    }
+
+    @GetMapping("/matcher")
+    public String getMatcher(HttpServletRequest request, @RequestParam String data) {
+        System.err.println(request.getRequestURI());
+        List<String> paths = List.of("/auth-provider/auth/**", "/auth/provider/**");
+        boolean isPathMatched = paths.stream().anyMatch(path -> antPathMatcher.match(path, data));
+        return Boolean.toString(isPathMatched);
     }
 }
