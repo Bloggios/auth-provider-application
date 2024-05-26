@@ -90,8 +90,10 @@ public class AuthenticationController {
     @GetMapping(EndpointConstants.AuthenticationController.REFRESH_TOKEN)
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         AuthResponse response = AsyncUtils.getAsyncResult(authenticationService.refreshToken(httpServletRequest, httpServletResponse));
-//        httpServletResponse.addCookie(response.getCookie());
-        return ResponseEntity.ok(response);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, response.getCookie().toString())
+                .body(response);
     }
 
     @PostMapping(EndpointConstants.AuthenticationController.OTP_USER_ID)

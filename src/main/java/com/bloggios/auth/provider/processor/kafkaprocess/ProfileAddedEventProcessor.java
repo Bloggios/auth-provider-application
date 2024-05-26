@@ -50,12 +50,12 @@ import java.util.Optional;
 
 @Component(BeanConstants.PROFILE_ADDED_EVENT_LISTENER)
 @Slf4j
-public class ProfileAddedEventListener implements KafkaProcess<ProfileAddedEvent> {
+public class ProfileAddedEventProcessor implements KafkaProcess<ProfileAddedEvent> {
 
     private final UserEntityDao userEntityDao;
     private final EsUserAuthUpdateProcessor esUserAuthUpdateProcessor;
 
-    public ProfileAddedEventListener(
+    public ProfileAddedEventProcessor(
             UserEntityDao userEntityDao,
             EsUserAuthUpdateProcessor esUserAuthUpdateProcessor
     ) {
