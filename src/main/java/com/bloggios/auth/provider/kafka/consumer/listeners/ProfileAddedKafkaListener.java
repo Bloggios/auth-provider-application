@@ -32,6 +32,8 @@ import com.bloggios.auth.provider.processor.KafkaProcess;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.listener.ConsumerAwareMessageListener;
 import org.springframework.stereotype.Component;
@@ -50,6 +52,7 @@ import java.io.IOException;
 @Component
 public class ProfileAddedKafkaListener implements ConsumerAwareMessageListener<String, IncomingMessage> {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProfileAddedKafkaListener.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private final KafkaProcess<ProfileAddedEvent> profileAddedEventListener;
@@ -62,6 +65,10 @@ public class ProfileAddedKafkaListener implements ConsumerAwareMessageListener<S
 
     @Override
     public void onMessage(ConsumerRecord<String, IncomingMessage> consumerRecord, Consumer<?, ?> consumer) {
+        logger.info("""
+                Event Received (Profile Added Kafka Listener)
+                {}
+                """, consumerRecord.value());
         try {
             ProfileAddedEvent profileAddedEvent = objectMapper.readValue(objectMapper.writeValueAsBytes(consumerRecord.value().getMessageData().getData()), ProfileAddedEvent.class);
             profileAddedEventListener.process(profileAddedEvent);
