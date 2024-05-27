@@ -62,10 +62,9 @@ auth-server:
     cookie-name: bloggios-auth
     roles-to-allow:
       devsandbox:
-        origin-name: https://api.bloggios.in
+        origin-name: https://dev.bloggios.in
         must-roles:
           - ROLE_DEVSANDBOX
-          - ROLE_DEVELOPER
       production:
         origin-name: https://www.bloggios.com
         must-roles:
@@ -78,10 +77,6 @@ auth-server:
         origin-name: http://localhost:2000
         must-roles:
           - ROLE_DEVELOPER
-      devsandbox:
-        origin-name: https://dev.bloggios.in
-        must-roles:
-          - ROLE_DEVSANDBOX
   OAuth2:
     authorized-redirect-uris:
       - http://localhost:3000/oauth2/redirect
