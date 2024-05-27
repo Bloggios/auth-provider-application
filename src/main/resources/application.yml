@@ -78,6 +78,10 @@ auth-server:
         origin-name: http://localhost:2000
         must-roles:
           - ROLE_DEVELOPER
+      devsandbox:
+        origin-name: https://dev.bloggios.in
+        must-roles:
+          - ROLE_DEVSANDBOX
   OAuth2:
     authorized-redirect-uris:
       - http://localhost:3000/oauth2/redirect
