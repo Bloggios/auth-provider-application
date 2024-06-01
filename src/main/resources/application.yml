@@ -92,7 +92,7 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_URL}
-    enabled: false
+    enabled: true
 management:
   endpoint:
     health:

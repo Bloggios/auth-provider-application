@@ -95,7 +95,7 @@ public class JwtDecoderUtil {
             Jwt jwt = jwtDecoder.decode(token);
             return jwt.getClaimAsString(ServiceConstants.USER_IP);
         } catch (Exception e) {
-            logger.error("Exception Occurred while extracting User Id from token with default message as : {}", e.getMessage());
+            logger.error("Exception Occurred while extracting Remote Address from token with default message as : {}", e.getMessage());
             throw new AuthenticationException(ExceptionCodes.UNABLE_TO_EXTRACT_USER_ID_FROM_TOKEN);
         }
     }

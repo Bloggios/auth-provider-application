@@ -61,6 +61,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private Boolean isCredentialsNonExpired;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
+    private Boolean isBadge;
 
     public UserPrincipal(
             String userId,
@@ -71,7 +72,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
             Boolean isAccountNonExpired,
             Boolean isAccountNonLocked,
             Boolean isCredentialsNonExpired,
-            Collection<? extends GrantedAuthority> authorities
+            Collection<? extends GrantedAuthority> authorities,
+            Boolean isBadge
     ) {
         this.userId = userId;
         this.username = username;
@@ -82,6 +84,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;
         this.authorities = authorities;
+        this.isBadge = isBadge;
     }
 
     public static UserPrincipal create(UserDocument userAuth) {
@@ -96,7 +99,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
                 userAuth.isAccountNonExpired(),
                 userAuth.isAccountNonLocked(),
                 userAuth.isCredentialsNonExpired(),
-                collect
+                collect,
+                userAuth.isBadge()
         );
     }
 

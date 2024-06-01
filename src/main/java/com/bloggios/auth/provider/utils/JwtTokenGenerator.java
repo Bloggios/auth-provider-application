@@ -79,6 +79,7 @@ public class JwtTokenGenerator {
                 .claim(ServiceConstants.ENVIRONMENT, Objects.requireNonNull(environment.getProperty(EnvironmentConstants.ACTIVE_PROFILE)))
                 .claim(ServiceConstants.TOKEN_TYPE, isLong ? ServiceConstants.EXTENDED_TOKEN : ServiceConstants.NORMAL_TOKEN)
                 .claim(ServiceConstants.REMOTE_ADDRESS, remoteAddress)
+                .claim(ServiceConstants.IS_BADGE, principal.getIsBadge())
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimSet)).getTokenValue();
     }
@@ -102,6 +103,7 @@ public class JwtTokenGenerator {
                 .claim(ServiceConstants.USER_EMAIL, principal.getEmail())
                 .claim(ServiceConstants.ENVIRONMENT, Objects.requireNonNull(environment.getProperty(EnvironmentConstants.ACTIVE_PROFILE)))
                 .claim(ServiceConstants.REMOTE_ADDRESS, remoteAddress)
+                .claim(ServiceConstants.IS_BADGE, principal.getIsBadge())
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimSet)).getTokenValue();
     }
@@ -126,6 +128,7 @@ public class JwtTokenGenerator {
                 .claim(ServiceConstants.ENVIRONMENT, Objects.requireNonNull(environment.getProperty(EnvironmentConstants.ACTIVE_PROFILE)))
                 .claim(ServiceConstants.REMOTE_ADDRESS, remoteAddress)
                 .claim(ServiceConstants.TOKEN_TYPE, ServiceConstants.COOKIE_TOKEN)
+                .claim(ServiceConstants.IS_BADGE, principal.getIsBadge())
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimSet)).getTokenValue();
     }
