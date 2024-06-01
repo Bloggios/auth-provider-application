@@ -24,6 +24,7 @@
 package com.bloggios.auth.provider.controller;
 
 import com.bloggios.auth.provider.constants.EndpointConstants;
+import com.bloggios.auth.provider.constants.ServiceConstants;
 import com.bloggios.auth.provider.payload.record.RemoteAddressResponse;
 import com.bloggios.auth.provider.payload.request.AuthenticationRequest;
 import com.bloggios.auth.provider.payload.request.ForgetPasswordRequest;
@@ -80,6 +81,7 @@ public class AuthenticationController {
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, asyncResult.getCookie().toString())
+                .header(ServiceConstants.COOKIE_TOKEN, asyncResult.getCookieToken())
                 .body(asyncResult);
     }
 
@@ -99,6 +101,7 @@ public class AuthenticationController {
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, response.getCookie().toString())
+                .header(ServiceConstants.COOKIE_TOKEN, response.getCookieToken())
                 .body(response);
     }
 

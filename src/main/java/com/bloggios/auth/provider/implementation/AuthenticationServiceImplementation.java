@@ -524,21 +524,35 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         UserPrincipal principal = (UserPrincipal) userAuthentication.getPrincipal();
         String remoteAddress = IpUtils.getRemoteAddress(httpServletRequest);
         String cookieName = environment.getProperty(EnvironmentConstants.REFRESH_TOKEN_COOKIE_NAME);
-        String accessToken = jwtTokenGenerator.generateAccessToken(
+        CompletableFuture<String> accessTokenFuture = CompletableFuture.supplyAsync(() -> jwtTokenGenerator.generateAccessToken(
                 userAuthentication,
                 getOrigin(httpServletRequest),
                 isLongToken(httpServletRequest),
                 remoteAddress
-        );
-        String refreshToken = jwtTokenGenerator.generateRefreshToken(
+        ));
+        CompletableFuture<String> refreshTokenFuture = CompletableFuture.supplyAsync(() -> jwtTokenGenerator.generateRefreshToken(
                 userAuthentication,
                 getOrigin(httpServletRequest),
                 remoteAddress
-        );
+        ));
+        CompletableFuture<String> cookieTokenFuture = CompletableFuture.supplyAsync(() -> jwtTokenGenerator.generateCookieToken(
+                userAuthentication,
+                getOrigin(httpServletRequest),
+                remoteAddress
+        ));
+        AsyncUtils.getAsyncResult(CompletableFuture.allOf(
+                accessTokenFuture,
+                refreshTokenFuture,
+                cookieTokenFuture
+        ));
+        String accessToken = accessTokenFuture.join();
+        String refreshToken = refreshTokenFuture.join();
+        String cookieToken = cookieTokenFuture.join();
         SecurityContextHolder.getContext().setAuthentication(userAuthentication);
         AuthResponse authResponse = AuthResponse.builder()
                 .userId(principal.getUserId())
                 .accessToken(accessToken)
+                .cookieToken(cookieToken)
                 .remoteAddress(IpUtils.getRemoteAddress(httpServletRequest))
                 .email(principal.getEmail())
                 .username(principal.getUsername())

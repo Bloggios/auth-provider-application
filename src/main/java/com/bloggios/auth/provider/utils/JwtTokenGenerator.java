@@ -105,4 +105,28 @@ public class JwtTokenGenerator {
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimSet)).getTokenValue();
     }
+
+    public String generateCookieToken(Authentication authentication, String origin, String remoteAddress) {
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+        Instant now = Instant.now();
+        JwtClaimsSet jwtClaimSet = JwtClaimsSet.builder()
+                .issuer(origin)
+                .issuedAt(now)
+                .claim(ServiceConstants.ENVIRONMENT, Objects.requireNonNull(environment.getProperty(EnvironmentConstants.ACTIVE_PROFILE)))
+                .expiresAt(now.plus(1, ChronoUnit.DAYS))
+                .subject(principal.getUserId())
+                .claim(ServiceConstants.AUTHORITY, roles)
+                .claim(ServiceConstants.USER_EMAIL, principal.getEmail())
+                .claim(ServiceConstants.REMOTE_ADDRESS, remoteAddress)
+                .claim(ServiceConstants.USERNAME, principal.getUsername())
+                .claim(ServiceConstants.USER_EMAIL, principal.getEmail())
+                .claim(ServiceConstants.ENVIRONMENT, Objects.requireNonNull(environment.getProperty(EnvironmentConstants.ACTIVE_PROFILE)))
+                .claim(ServiceConstants.REMOTE_ADDRESS, remoteAddress)
+                .claim(ServiceConstants.TOKEN_TYPE, ServiceConstants.COOKIE_TOKEN)
+                .build();
+        return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimSet)).getTokenValue();
+    }
 }

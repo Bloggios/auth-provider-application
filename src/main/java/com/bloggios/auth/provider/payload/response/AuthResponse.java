@@ -66,4 +66,7 @@ public class AuthResponse {
 
     @JsonIgnore
     private String refreshToken;
+
+    @JsonIgnore
+    private String cookieToken;
 }

@@ -88,4 +88,5 @@ public class ServiceConstants {
     public static final String INTERNAL_ERROR_TYPE = "INTERNAL ERROR";
     public static final String ACCESS_DENIED_ERROR_CODE = "AE__AUTH-ACCESS-DENIED";
     public static final String DATA_ERROR_TYPE = "DATA ERROR";
+    public static final String COOKIE_TOKEN = "cookie-token";
 }
