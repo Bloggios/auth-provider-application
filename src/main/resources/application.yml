@@ -79,7 +79,7 @@ auth-server:
           - ROLE_DEVELOPER
   OAuth2:
     authorized-redirect-uris:
-      - http://localhost:3000/oauth2/redirect
+      - http://localhost:2000/oauth2/redirect
       - https://bloggios.com/oauth2/redirect
       - https://bloggios.cloud/oauth2/redirect
 
@@ -92,7 +92,7 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_URL}
-    enabled: true
+    enabled: false
 management:
   endpoint:
     health:

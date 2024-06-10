@@ -131,8 +131,11 @@ public class AuthenticationController {
     @GetMapping(EndpointConstants.AuthenticationController.REFRESH_TOKEN_SOCIAL)
     public ResponseEntity<AuthResponse> refreshTokenSocial(@RequestParam String token, HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) {
         AuthResponse response = AsyncUtils.getAsyncResult(authenticationService.refreshTokenSocial(token, httpServletResponse, httpServletRequest));
-//        httpServletResponse.addCookie(response.getCookie());
-        return ResponseEntity.ok(response);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, response.getCookie().toString())
+                .header(ServiceConstants.COOKIE_TOKEN, response.getCookieToken())
+                .body(response);
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.FORGET_PASSWORD_OTP_PATH)
