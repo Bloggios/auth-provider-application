@@ -88,9 +88,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication, String origin) {
+        logger.warn("Entry Determine");
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
         if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+            logger.error("Determine Error 1");
             throw new AuthenticationException(ExceptionCodes.UNAUTHORIZED_REDIRECT_URI);
         }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
@@ -107,6 +109,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 getOrigin(request),
                 remoteAddress
         );
+        logger.warn("Exit Determine");
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken)
