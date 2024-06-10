@@ -82,6 +82,7 @@ auth-server:
       - http://localhost:2000/oauth2/redirect
       - https://bloggios.com/oauth2/redirect
       - https://bloggios.cloud/oauth2/redirect
+      - https://auth.bloggios.in/oauth2/redirect
 
 refresh-mgmt:
   cookie-name: ${ACTIVE_PROFILE:local}.bg-refresh-mgmt
