@@ -42,7 +42,6 @@ jobs:
             git pull origin main
             set +e
             docker-compose -f docker-compose-devsandbox.yml stop auth-provider-application
-#            docker-compose -f docker-compose-devsandbox.yml stop auth-provider-social-application
             docker rmi auth-provider-application:1.0
             set -e
 
@@ -96,7 +95,6 @@ jobs:
           script: |
             cd /root/bloggios-deployment-docker-files
             docker-compose -f docker-compose-devsandbox.yml up -d auth-provider-application
-#            docker-compose -f docker-compose-devsandbox.yml up -d auth-provider-social-application
 
       - name: Removing Targets
         uses: appleboy/ssh-action@master
