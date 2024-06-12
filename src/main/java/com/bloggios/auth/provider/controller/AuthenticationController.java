@@ -148,15 +148,4 @@ public class AuthenticationController {
     public ResponseEntity<RemoteAddressResponse> remoteAddress(HttpServletRequest request) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.remoteAddress(request)));
     }
-
-    @GetMapping(EndpointConstants.AuthenticationController.GOOGLE_LOGIN)
-    public ResponseEntity<AuthResponse> loginGoogle(@RequestParam String token, @RequestParam String secret, HttpServletRequest httpServletRequest) {
-        CompletableFuture<AuthResponse> authenticate = authenticationService.loginGoogle(token, secret, httpServletRequest);
-        AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.SET_COOKIE, asyncResult.getCookie().toString())
-                .header(ServiceConstants.COOKIE_TOKEN, asyncResult.getCookieToken())
-                .body(asyncResult);
-    }
 }

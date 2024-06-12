@@ -66,4 +66,9 @@ public class EndpointConstants {
         public static final String ASSIGN_ROLES = "/assign-roles";
         public static final String GET_USER_PROFILE_RESPONSE = "/user-profile-response";
     }
+
+    public static class OAuthController {
+        public static final String BASE_PATH = CONTEXT_PATH + "/oauth";
+        public static final String GOOGLE_LOGIN = "/login-google";
+    }
 }

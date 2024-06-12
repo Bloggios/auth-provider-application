@@ -111,5 +111,6 @@ authentication:
   path-exclude:
     paths:
       - /auth-provider/auth/**
+      - /auth-provider/oauth/**
       - /actuator/**
       - /oauth2/**
