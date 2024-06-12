@@ -21,44 +21,37 @@
  * limitations under the License.
  */
 
-package com.bloggios.auth.provider.payload.oauth2;
+package com.bloggios.auth.provider.payload;
 
-import com.bloggios.auth.provider.oauth2.OAuth2UserInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
- * Owner - Rohit Parihar
+ * Owner - Rohit Parihar and Bloggios
  * Author - rohit
  * Project - auth-provider-application
- * Package - com.bloggios.auth.provider.oauth2.OAuth2UserInfo
- * Created_on - 07 February-2024
- * Created_at - 17 : 48
+ * Package - com.bloggios.auth.provider.payload
+ * Created_on - June 12 - 2024
+ * Created_at - 16:40
  */
 
-public class GithubOAuth2UserInfo extends OAuth2UserInfo {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class GoogleOauthUserInfo {
 
-    public GithubOAuth2UserInfo(Map<String, Object> attributes) {
-        super(attributes);
-    }
+    private String googleUserId;
+    private String email;
+    private boolean emailVerified;
 
-    @Override
-    public String getId() {
-        return ((Integer) attributes.get("id")).toString();
-    }
-
-    @Override
-    public String getName() {
-        return (String) attributes.get("name");
-    }
-
-    @Override
-    public String getEmail() {
-        return (String) attributes.get("email");
-    }
-
-    @Override
-    public String getImageUrl() {
-        return (String) attributes.get("avatar_url");
+    public GoogleOauthUserInfo(LinkedHashMap<String, Object> hashMap) {
+        this.googleUserId = (String) hashMap.get("sub");
+        this.email = (String) hashMap.get("email");
+        this.emailVerified = (Boolean) hashMap.get("email_verified");
     }
 }

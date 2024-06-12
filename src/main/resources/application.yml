@@ -31,21 +31,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: "https://auth.bloggios.in/oauth2/callback/{registrationId}"
-            scope:
-              - email
-              - profile
 
 application:
   version: @version@
-  email-provider: BG-AUTH-LOCAL-EMAIL-1
   profile: ${ACTIVE_PROFILE}
 
 elasticsearch:
@@ -78,11 +66,10 @@ auth-server:
         must-roles:
           - ROLE_DEVELOPER
   OAuth2:
-    authorized-redirect-uris:
-      - http://localhost:2000/oauth2/redirect
-      - https://bloggios.com/oauth2/redirect
-      - https://bloggios.cloud/oauth2/redirect
-      - https://auth.bloggios.in/oauth2/redirect
+    OAuth-data:
+      google:
+        clientId: ${GOOGLE_CLIENT_ID}
+        api-secret: ${GOOGLE_API_SECRET}
 
 refresh-mgmt:
   cookie-name: ${ACTIVE_PROFILE:local}.bg-refresh-mgmt

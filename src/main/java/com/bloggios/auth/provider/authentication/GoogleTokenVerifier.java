@@ -21,38 +21,37 @@
  * limitations under the License.
  */
 
-package com.bloggios.auth.provider.oauth2;
+package com.bloggios.auth.provider.authentication;
 
-import com.bloggios.auth.provider.enums.Provider;
-import com.bloggios.auth.provider.exception.payloads.OAuth2AuthenticationProcessingException;
-import com.bloggios.auth.provider.payload.oauth2.FacebookOAuth2UserInfo;
-import com.bloggios.auth.provider.payload.oauth2.GithubOAuth2UserInfo;
-import com.bloggios.auth.provider.payload.oauth2.GoogleOAuth2UserInfo;
-import lombok.experimental.UtilityClass;
+import com.bloggios.auth.provider.constants.ExceptionCodes;
+import com.bloggios.auth.provider.exception.payloads.AuthenticationException;
+import com.bloggios.auth.provider.properties.AuthServerProperties;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 /**
- * Owner - Rohit Parihar
+ * Owner - Rohit Parihar and Bloggios
  * Author - rohit
  * Project - auth-provider-application
- * Package - com.bloggios.auth.provider.oauth2
- * Created_on - 07 February-2024
- * Created_at - 17 : 48
+ * Package - com.bloggios.auth.provider.authentication
+ * Created_on - June 12 - 2024
+ * Created_at - 15:03
  */
 
-@UtilityClass
-public class OAuth2UserInfoFactory {
+@Service
+@RequiredArgsConstructor
+public class GoogleTokenVerifier {
 
-    public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) {
-        if(registrationId.equalsIgnoreCase(Provider.google.toString())) {
-            return new GoogleOAuth2UserInfo(attributes);
-        } else if (registrationId.equalsIgnoreCase(Provider.facebook.toString())) {
-            return new FacebookOAuth2UserInfo(attributes);
-        } else if (registrationId.equalsIgnoreCase(Provider.github.toString())) {
-            return new GithubOAuth2UserInfo(attributes);
-        } else {
-            throw new OAuth2AuthenticationProcessingException("Sorry! Login with " + registrationId + " is not supported yet.");
+    private final AuthServerProperties authServerProperties;
+
+    public void authorize(String secret) {
+        Map<String, AuthServerProperties.OAuthData> oAuthData = authServerProperties.getOAuth2().getOAuthData();
+        AuthServerProperties.OAuthData google = oAuthData.get("google");
+        String googleSecret = google.getApiSecret();
+        if (!googleSecret.equals(secret)) {
+            throw new AuthenticationException(ExceptionCodes.GOOGLE_SECRET_VERIFICATION_FAILED);
         }
     }
 }

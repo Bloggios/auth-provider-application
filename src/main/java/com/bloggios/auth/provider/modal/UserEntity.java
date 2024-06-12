@@ -59,6 +59,9 @@ public class UserEntity {
     @GenericGenerator(name = ServiceConstants.RANDOM_UUID, strategy = ServiceConstants.UUID_STRATEGY)
     private String userId;
 
+    @Column(unique = true)
+    private String oauthId;
+
     @Column(unique = true, nullable = false)
     private String email;
 

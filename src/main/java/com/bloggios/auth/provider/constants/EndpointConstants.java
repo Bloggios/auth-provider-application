@@ -57,6 +57,7 @@ public class EndpointConstants {
         public static final String LOGOUT = "/logout";
         public static final String USER_IP = "/user-ip";
         public static final String REFRESH_TOKEN_SOCIAL = "/refresh-token-social";
+        public static final String GOOGLE_LOGIN = "/login-google";
     }
 
     public static class UserController {

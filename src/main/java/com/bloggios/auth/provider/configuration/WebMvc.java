@@ -48,7 +48,7 @@ public class WebMvc {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(List.of(
-                "http://localhost:3000",
+                "http://localhost:2000",
                 "https://bloggios.com",
                 "https://dev.bloggios.in",
                 "https://www.bloggios.com"

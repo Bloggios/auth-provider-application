@@ -27,11 +27,8 @@ import com.bloggios.auth.provider.authentication.BloggiosAuthenticationEntryPoin
 import com.bloggios.auth.provider.authentication.BloggiosAuthenticationProvider;
 import com.bloggios.auth.provider.authentication.CustomUserDetailService;
 import com.bloggios.auth.provider.authentication.JwtTokenValidationFilter;
-import com.bloggios.auth.provider.oauth2.CustomOAuth2UserService;
-import com.bloggios.auth.provider.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.bloggios.auth.provider.oauth2.OAuth2AuthenticationFailureHandler;
-import com.bloggios.auth.provider.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.bloggios.auth.provider.properties.AuthenticationProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,33 +58,13 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private final AuthenticationProperties authenticationProperties;
     private final CustomUserDetailService customUserDetailService;
     private final BloggiosAuthenticationEntryPoint bloggiosAuthenticationEntryPoint;
     private final JwtTokenValidationFilter jwtTokenValidationFilter;
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-
-    public SecurityConfiguration(
-            AuthenticationProperties authenticationProperties,
-            CustomUserDetailService customUserDetailService,
-            BloggiosAuthenticationEntryPoint bloggiosAuthenticationEntryPoint,
-            JwtTokenValidationFilter jwtTokenValidationFilter,
-            CustomOAuth2UserService customOAuth2UserService,
-            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
-            OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler
-    ) {
-        this.authenticationProperties = authenticationProperties;
-        this.customUserDetailService = customUserDetailService;
-        this.bloggiosAuthenticationEntryPoint = bloggiosAuthenticationEntryPoint;
-        this.jwtTokenValidationFilter = jwtTokenValidationFilter;
-        this.customOAuth2UserService = customOAuth2UserService;
-        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
-        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -114,20 +91,7 @@ public class SecurityConfiguration {
                     );
                 })
                 .formLogin().disable()
-                .httpBasic().disable()
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorize")
-                .authorizationRequestRepository(cookieAuthorizationRequestRepository())
-                .and()
-                .redirectionEndpoint()
-                .baseUri("/oauth2/callback/*")
-                .and()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-                .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler);
+                .httpBasic().disable();
         http.addFilterBefore(jwtTokenValidationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -148,10 +112,5 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationManager authenticationManager() {
         return authentication -> bloggiosAuthenticationProvider().authenticate(authentication);
-    }
-
-    @Bean
-    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
-        return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
 }

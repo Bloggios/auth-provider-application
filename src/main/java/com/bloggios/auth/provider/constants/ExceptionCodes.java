@@ -64,6 +64,7 @@ public class ExceptionCodes {
     public static final String FORGET_PASSWORD_USER_ID_NOT_MATCHED_EMAIL_USER_AUTH = "IE__AUTH-1019";
     public static final String USER_ID_PASSED_NULL_OR_EMPTY_FORGET_PASSWORD_ES = "IE__AUTH-2020";
     public static final String UNABLE_TO_EXTRACT_USER_IP_FROM_TOKEN = "IE__AUTH-2021";
+    public static final String CASTING_ERROR = "IE__AUTH-2022";
 
 
     public static final String USER_NOT_FOUND_WITH_EMAIL = "DE__AUTH-2001";
@@ -102,4 +103,6 @@ public class ExceptionCodes {
     public static final String USER_NOT_PRESENT_FOR_OTP = "DE__AUTH-2046";
     public static final String OTP_NOT_PRESENT_FOR_USER = "DE__AUTH-2048";
     public static final String ROLES_CANNOT_CONTAINS_NULL = "DE__AUTH-2049";
+    public static final String GOOGLE_SECRET_VERIFICATION_FAILED = "DE__AUTH-2050";
+    public static final String LOGIN_PROVIDER_NOT_VALID = "DE__AUTH-2051";
 }

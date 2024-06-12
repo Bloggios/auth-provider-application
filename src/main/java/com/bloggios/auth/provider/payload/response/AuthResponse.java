@@ -29,7 +29,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.http.ResponseCookie;
 
-import javax.servlet.http.Cookie;
 import java.util.List;
 
 /**

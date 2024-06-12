@@ -28,7 +28,6 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +66,13 @@ public class AuthServerProperties {
     @Getter
     @Setter
     public static class OAuth2 {
-        private List<String> authorizedRedirectUris = new ArrayList<>();
+        private Map<String, OAuthData> oAuthData;
+    }
+
+    @Getter
+    @Setter
+    public static class OAuthData {
+        private String clientId;
+        private String apiSecret;
     }
 }

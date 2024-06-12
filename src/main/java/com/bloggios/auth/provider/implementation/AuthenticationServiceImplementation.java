@@ -24,6 +24,7 @@
 package com.bloggios.auth.provider.implementation;
 
 import com.bloggios.auth.provider.authentication.CustomUserDetailService;
+import com.bloggios.auth.provider.authentication.GoogleTokenVerifier;
 import com.bloggios.auth.provider.authentication.UserPrincipal;
 import com.bloggios.auth.provider.constants.*;
 import com.bloggios.auth.provider.dao.implementation.esimplementation.ForgetPasswordDao;
@@ -34,10 +35,12 @@ import com.bloggios.auth.provider.document.ForgetPasswordDocument;
 import com.bloggios.auth.provider.document.RegistrationOtpDocument;
 import com.bloggios.auth.provider.document.UserDocument;
 import com.bloggios.auth.provider.enums.DaoStatus;
+import com.bloggios.auth.provider.enums.Provider;
 import com.bloggios.auth.provider.exception.payloads.AuthenticationException;
 import com.bloggios.auth.provider.exception.payloads.BadRequestException;
 import com.bloggios.auth.provider.kafka.producer.producers.ForgetPasswordOtpProducer;
 import com.bloggios.auth.provider.modal.UserEntity;
+import com.bloggios.auth.provider.payload.GoogleOauthUserInfo;
 import com.bloggios.auth.provider.payload.event.ForgetPasswordOtpEvent;
 import com.bloggios.auth.provider.payload.record.RefreshTokenDaoValidationRecord;
 import com.bloggios.auth.provider.payload.record.RemoteAddressResponse;
@@ -53,6 +56,7 @@ import com.bloggios.auth.provider.processor.elasticprocessor.EsUserAuthUpdatePro
 import com.bloggios.auth.provider.processor.executors.AddRegistrationOtp;
 import com.bloggios.auth.provider.processor.implementation.*;
 import com.bloggios.auth.provider.service.AuthenticationService;
+import com.bloggios.auth.provider.transformer.implementation.OauthUserToUserAuthTransformer;
 import com.bloggios.auth.provider.transformer.implementation.RegisterUserRequestToUserAuthTransformer;
 import com.bloggios.auth.provider.utils.*;
 import com.bloggios.auth.provider.validator.implementation.businessvalidator.NativeRefreshTokenValidator;
@@ -61,10 +65,11 @@ import com.bloggios.auth.provider.validator.implementation.exhibitor.Authenticat
 import com.bloggios.auth.provider.validator.implementation.exhibitor.ForgetPasswordUserAuthExhibitor;
 import com.bloggios.auth.provider.validator.implementation.exhibitor.RegisterRequestExhibitor;
 import com.bloggios.auth.provider.validator.implementation.exhibitor.ResendOtpExhibitor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
-import org.springframework.http.ResponseCookie;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -73,16 +78,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -100,6 +106,7 @@ import static com.bloggios.auth.provider.constants.ServiceConstants.ORIGIN;
  */
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationServiceImplementation implements AuthenticationService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationServiceImplementation.class);
@@ -114,10 +121,8 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
     private final ResendOtpExhibitor resendOtpExhibitor;
     private final AddRegistrationOtp addRegistrationOtp;
     private final JwtDecoderUtil jwtDecoderUtil;
-    private final JwtDecoder jwtDecoder;
     private final CustomUserDetailService customUserDetailService;
     private final PasswordEncoder passwordEncoder;
-    private final PgSqlUserAuthPersistProcessor pgSqlUserAuthPersistProcessor;
     private final UserEventPublishProcessor userEventPublishProcessor;
     private final RegisterRequestExhibitor registerRequestExhibitor;
     private final RegisterUserRequestToUserAuthTransformer registerUserRequestToUserAuthTransformer;
@@ -136,74 +141,8 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
     private final LogoutUserRefreshTokenValidationProcessor logoutUserRefreshTokenValidationProcessor;
     private final NativeRefreshTokenValidator nativeRefreshTokenValidator;
     private final RefreshTokenDaoValidation refreshTokenDaoValidation;
-
-    public AuthenticationServiceImplementation(
-            AuthenticationManager authenticationManager,
-            JwtTokenGenerator jwtTokenGenerator,
-            AuthenticationRequestValidator authenticationRequestValidator,
-            LoginDataProcessor loginDataProcessor,
-            Environment environment,
-            EsRegistrationOtpRepository registrationOtpRepository,
-            UserDocumentRepository userAuthRepository,
-            ResendOtpExhibitor resendOtpExhibitor,
-            AddRegistrationOtp addRegistrationOtp,
-            JwtDecoderUtil jwtDecoderUtil,
-            JwtDecoder jwtDecoder,
-            CustomUserDetailService customUserDetailService,
-            PasswordEncoder passwordEncoder,
-            PgSqlUserAuthPersistProcessor pgSqlUserAuthPersistProcessor,
-            UserEventPublishProcessor userEventPublishProcessor,
-            RegisterRequestExhibitor registerRequestExhibitor,
-            RegisterUserRequestToUserAuthTransformer registerUserRequestToUserAuthTransformer,
-            UserEntityDao userEntityDao,
-            EsUserAuthPersistProcessor esUserAuthPersistProcessor,
-            SendRegistrationOtpProcessor sendRegistrationOtpProcessor,
-            ForgetPasswordUserAuthExhibitor forgetPasswordUserAuthExhibitor,
-            ForgetPasswordDao forgetPasswordDao,
-            OtpGenerator otpGenerator,
-            ForgetPasswordOtpProducer forgetPasswordOtpProducer,
-            PasswordValidator passwordValidator,
-            EsUserAuthUpdateProcessor esUserAuthUpdateProcessor,
-            RefreshTokenPersistence refreshTokenPersistence,
-            VerifiedUserEntityTransformer verifiedUserEntityTransformer,
-            UserEntityToDocumentPersistence userEntityToDocumentPersistence,
-            LogoutUserRefreshTokenValidationProcessor logoutUserRefreshTokenValidationProcessor,
-            NativeRefreshTokenValidator nativeRefreshTokenValidator,
-            RefreshTokenDaoValidation refreshTokenDaoValidation
-    ) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenGenerator = jwtTokenGenerator;
-        this.authenticationRequestValidator = authenticationRequestValidator;
-        this.loginDataProcessor = loginDataProcessor;
-        this.environment = environment;
-        this.registrationOtpRepository = registrationOtpRepository;
-        this.userAuthRepository = userAuthRepository;
-        this.resendOtpExhibitor = resendOtpExhibitor;
-        this.addRegistrationOtp = addRegistrationOtp;
-        this.jwtDecoderUtil = jwtDecoderUtil;
-        this.jwtDecoder = jwtDecoder;
-        this.customUserDetailService = customUserDetailService;
-        this.passwordEncoder = passwordEncoder;
-        this.pgSqlUserAuthPersistProcessor = pgSqlUserAuthPersistProcessor;
-        this.userEventPublishProcessor = userEventPublishProcessor;
-        this.registerRequestExhibitor = registerRequestExhibitor;
-        this.registerUserRequestToUserAuthTransformer = registerUserRequestToUserAuthTransformer;
-        this.userEntityDao = userEntityDao;
-        this.esUserAuthPersistProcessor = esUserAuthPersistProcessor;
-        this.sendRegistrationOtpProcessor = sendRegistrationOtpProcessor;
-        this.forgetPasswordUserAuthExhibitor = forgetPasswordUserAuthExhibitor;
-        this.forgetPasswordDao = forgetPasswordDao;
-        this.otpGenerator = otpGenerator;
-        this.forgetPasswordOtpProducer = forgetPasswordOtpProducer;
-        this.passwordValidator = passwordValidator;
-        this.esUserAuthUpdateProcessor = esUserAuthUpdateProcessor;
-        this.refreshTokenPersistence = refreshTokenPersistence;
-        this.verifiedUserEntityTransformer = verifiedUserEntityTransformer;
-        this.userEntityToDocumentPersistence = userEntityToDocumentPersistence;
-        this.logoutUserRefreshTokenValidationProcessor = logoutUserRefreshTokenValidationProcessor;
-        this.nativeRefreshTokenValidator = nativeRefreshTokenValidator;
-        this.refreshTokenDaoValidation = refreshTokenDaoValidation;
-    }
+    private final GoogleTokenVerifier googleTokenVerifier;
+    private final OauthUserToUserAuthTransformer oauthUserToUserAuthTransformer;
 
     /**
      * Register User
@@ -505,6 +444,44 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         return CompletableFuture.completedFuture(
                 new RemoteAddressResponse(v4, localAddr)
         );
+    }
+
+    @Override
+    public CompletableFuture<AuthResponse> loginGoogle(String token, String secret, HttpServletRequest httpServletRequest) {
+        long startTime = System.currentTimeMillis();
+        googleTokenVerifier.authorize(secret);
+        String userInfoEndpoint = "https://openidconnect.googleapis.com/v1/userinfo";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        ResponseEntity<Object> response = restTemplate.exchange(
+                userInfoEndpoint,
+                HttpMethod.GET,
+                entity,
+                Object.class
+        );
+        if (! (response.getBody() instanceof LinkedHashMap<?, ?>)) {
+            throw new BadRequestException(ExceptionCodes.CASTING_ERROR);
+        }
+        LinkedHashMap<String, Object> body = (LinkedHashMap<String, Object>)response.getBody();
+        GoogleOauthUserInfo userInfo = new GoogleOauthUserInfo(body);
+        Optional<UserEntity> userByEmailOptional = userEntityDao.findByEmailOptional(userInfo.getEmail());
+        if (userByEmailOptional.isEmpty()) {
+            UserEntity userEntity = oauthUserToUserAuthTransformer.transform(userInfo, httpServletRequest);
+            UserEntity userEntityResponse = userEntityDao.initOperation(DaoStatus.CREATE, userEntity);
+            esUserAuthPersistProcessor.persistData(userEntityResponse);
+            logger.info("Google OAuth new user registered to sever");
+        } else {
+            UserEntity userEntity = userByEmailOptional.get();
+            if (!userEntity.getProvider().equals(Provider.google)) {
+                throw new BadRequestException(ExceptionCodes.LOGIN_PROVIDER_NOT_VALID, String.format("Your account has been created using %s . Please use %s account to login", userEntity.getProvider().name(), userEntity.getProvider().name()));
+            }
+        }
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(userInfo.getEmail());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        AuthResponse authResponse = getAuthResponse(httpServletRequest, authentication);
+        return CompletableFuture.completedFuture(authResponse);
     }
 
     private String getOrigin(HttpServletRequest httpServletRequest) {

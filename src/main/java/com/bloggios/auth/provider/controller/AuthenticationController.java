@@ -41,8 +41,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -153,11 +151,15 @@ public class AuthenticationController {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.remoteAddress(request)));
     }
 
-    @GetMapping("/matcher")
-    public String getMatcher(HttpServletRequest request, @RequestParam String data) {
-        System.err.println(request.getRequestURI());
-        List<String> paths = List.of("/auth-provider/auth/**", "/auth/provider/**");
-        boolean isPathMatched = paths.stream().anyMatch(path -> antPathMatcher.match(path, data));
-        return Boolean.toString(isPathMatched);
+    @GetMapping(EndpointConstants.AuthenticationController.GOOGLE_LOGIN)
+    @CrossOrigin("*")
+    public ResponseEntity<AuthResponse> loginGoogle(@RequestParam String token, @RequestParam String secret, HttpServletRequest httpServletRequest) {
+        CompletableFuture<AuthResponse> authenticate = authenticationService.loginGoogle(token, secret, httpServletRequest);
+        AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, asyncResult.getCookie().toString())
+                .header(ServiceConstants.COOKIE_TOKEN, asyncResult.getCookieToken())
+                .body(asyncResult);
     }
 }

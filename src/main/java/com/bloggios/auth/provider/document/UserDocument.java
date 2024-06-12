@@ -67,6 +67,12 @@ public class UserDocument {
     )
     private String userId;
 
+    @Field(
+            type = FieldType.Keyword,
+            normalizer = ServiceConstants.DEFAULT_NORMALIZER
+    )
+    private String oauthId;
+
     @MultiField(
             mainField = @Field(
                     type = FieldType.Text,
