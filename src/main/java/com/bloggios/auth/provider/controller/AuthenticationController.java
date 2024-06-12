@@ -54,12 +54,10 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping(EndpointConstants.AuthenticationController.BASE_PATH)
+@CrossOrigin("*")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-
-    @Autowired
-    private AntPathMatcher antPathMatcher;
 
     public AuthenticationController(
             AuthenticationService authenticationService
@@ -152,7 +150,6 @@ public class AuthenticationController {
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.GOOGLE_LOGIN)
-    @CrossOrigin("*")
     public ResponseEntity<AuthResponse> loginGoogle(@RequestParam String token, @RequestParam String secret, HttpServletRequest httpServletRequest) {
         CompletableFuture<AuthResponse> authenticate = authenticationService.loginGoogle(token, secret, httpServletRequest);
         AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);
