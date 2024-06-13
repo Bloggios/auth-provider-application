@@ -49,7 +49,6 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping(EndpointConstants.OAuthController.BASE_PATH)
-@CrossOrigin("*")
 @Slf4j
 public class OAuthController {
 
