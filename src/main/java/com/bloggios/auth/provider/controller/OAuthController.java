@@ -28,6 +28,7 @@ import com.bloggios.auth.provider.constants.ServiceConstants;
 import com.bloggios.auth.provider.implementation.AuthenticationServiceImplementation;
 import com.bloggios.auth.provider.payload.response.AuthResponse;
 import com.bloggios.auth.provider.utils.AsyncUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -49,6 +50,7 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequestMapping(EndpointConstants.OAuthController.BASE_PATH)
 @CrossOrigin("*")
+@Slf4j
 public class OAuthController {
 
     private final AuthenticationServiceImplementation authenticationServiceImplementation;
@@ -59,6 +61,7 @@ public class OAuthController {
 
     @GetMapping(EndpointConstants.OAuthController.GOOGLE_LOGIN)
     public ResponseEntity<AuthResponse> loginGoogle(@RequestParam String token, @RequestParam String secret, HttpServletRequest httpServletRequest) {
+        log.error("4004 : {}", httpServletRequest.getRequestURL().toString());
         CompletableFuture<AuthResponse> authenticate = authenticationServiceImplementation.loginGoogle(token, secret, httpServletRequest);
         AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);
         return ResponseEntity
