@@ -27,6 +27,8 @@ import com.bloggios.auth.provider.constants.ExceptionCodes;
 import com.bloggios.auth.provider.exception.payloads.AuthenticationException;
 import com.bloggios.auth.provider.properties.AuthServerProperties;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -44,12 +46,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GoogleTokenVerifier {
 
+    private static final Logger logger = LoggerFactory.getLogger(GoogleTokenVerifier.class);
+
     private final AuthServerProperties authServerProperties;
 
     public void authorize(String secret) {
         Map<String, AuthServerProperties.OAuthData> oAuthData = authServerProperties.getOAuth2().getOAuthData();
         AuthServerProperties.OAuthData google = oAuthData.get("google");
         String googleSecret = google.getApiSecret();
+        logger.warn("Given Secret : {}", secret);
+        logger.warn("Google Secret : {}", googleSecret);
         if (!googleSecret.equals(secret)) {
             throw new AuthenticationException(ExceptionCodes.GOOGLE_SECRET_VERIFICATION_FAILED);
         }
