@@ -60,7 +60,7 @@ public class OAuthController {
 
     @GetMapping(EndpointConstants.OAuthController.GOOGLE_LOGIN)
     public ResponseEntity<AuthResponse> loginGoogle(@RequestParam String token, @RequestParam String secret, HttpServletRequest httpServletRequest) {
-        log.error("4004 : {}", httpServletRequest.getRequestURL().toString());
+        log.error("4004 : {}", httpServletRequest.getHeader(ServiceConstants.ORIGIN));
         CompletableFuture<AuthResponse> authenticate = authenticationServiceImplementation.loginGoogle(token, secret, httpServletRequest);
         AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);
         return ResponseEntity
