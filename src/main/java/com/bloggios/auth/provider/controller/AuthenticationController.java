@@ -54,7 +54,6 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping(EndpointConstants.AuthenticationController.BASE_PATH)
-@CrossOrigin("*")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
