@@ -482,6 +482,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         UserDetails userDetails = customUserDetailService.loadUserByUsername(userInfo.getEmail());
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         AuthResponse authResponse = getAuthResponse(httpServletRequest, authentication);
+        logger.info("Execution Time (Login Google) -> {}ms", System.currentTimeMillis() - startTime);
         return CompletableFuture.completedFuture(authResponse);
     }
 
