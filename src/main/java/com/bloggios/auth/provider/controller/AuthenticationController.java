@@ -33,6 +33,7 @@ import com.bloggios.auth.provider.payload.response.AuthResponse;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
 import com.bloggios.auth.provider.service.AuthenticationService;
 import com.bloggios.auth.provider.utils.AsyncUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping(EndpointConstants.AuthenticationController.BASE_PATH)
+@Slf4j
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -150,6 +152,8 @@ public class AuthenticationController {
 
     @GetMapping(EndpointConstants.OAuthController.GOOGLE_LOGIN)
     public ResponseEntity<AuthResponse> loginGoogle(@RequestHeader("token") String token, @RequestHeader("secret") String secret, HttpServletRequest httpServletRequest) {
+        log.error("1001 Token Header : {}", httpServletRequest.getHeader("token"));
+        log.error("1002 Secret Header : {}", httpServletRequest.getHeader("secret"));
         CompletableFuture<AuthResponse> authenticate = authenticationService.loginGoogle(token, secret, httpServletRequest);
         AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);
         return ResponseEntity
