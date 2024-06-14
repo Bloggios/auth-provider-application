@@ -28,6 +28,7 @@ import com.bloggios.auth.provider.constants.ServiceConstants;
 import com.bloggios.auth.provider.payload.record.RemoteAddressResponse;
 import com.bloggios.auth.provider.payload.request.AuthenticationRequest;
 import com.bloggios.auth.provider.payload.request.ForgetPasswordRequest;
+import com.bloggios.auth.provider.payload.request.GoogleLoginRequest;
 import com.bloggios.auth.provider.payload.request.RegisterRequest;
 import com.bloggios.auth.provider.payload.response.AuthResponse;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
@@ -150,11 +151,9 @@ public class AuthenticationController {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.remoteAddress(request)));
     }
 
-    @GetMapping(EndpointConstants.OAuthController.GOOGLE_LOGIN)
-    public ResponseEntity<AuthResponse> loginGoogle(@RequestHeader("token") String token, @RequestHeader("secret") String secret, HttpServletRequest httpServletRequest) {
-        log.error("1001 Token Header : {}", httpServletRequest.getHeader("token"));
-        log.error("1002 Secret Header : {}", httpServletRequest.getHeader("secret"));
-        CompletableFuture<AuthResponse> authenticate = authenticationService.loginGoogle(token, secret, httpServletRequest);
+    @PostMapping(EndpointConstants.OAuthController.GOOGLE_LOGIN)
+    public ResponseEntity<AuthResponse> loginGoogle(@RequestBody GoogleLoginRequest googleLoginRequest, HttpServletRequest httpServletRequest) {
+        CompletableFuture<AuthResponse> authenticate = authenticationService.loginGoogle(googleLoginRequest, httpServletRequest);
         AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);
         return ResponseEntity
                 .ok()

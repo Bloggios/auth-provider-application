@@ -26,6 +26,7 @@ package com.bloggios.auth.provider.service;
 import com.bloggios.auth.provider.payload.record.RemoteAddressResponse;
 import com.bloggios.auth.provider.payload.request.AuthenticationRequest;
 import com.bloggios.auth.provider.payload.request.ForgetPasswordRequest;
+import com.bloggios.auth.provider.payload.request.GoogleLoginRequest;
 import com.bloggios.auth.provider.payload.request.RegisterRequest;
 import com.bloggios.auth.provider.payload.response.AuthResponse;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
@@ -56,5 +57,5 @@ public interface AuthenticationService {
     CompletableFuture<ModuleResponse> forgetPasswordOtp(String email);
     CompletableFuture<ModuleResponse> forgetPassword(ForgetPasswordRequest forgetPasswordRequest);
     CompletableFuture<RemoteAddressResponse> remoteAddress(HttpServletRequest request);
-    CompletableFuture<AuthResponse> loginGoogle(String authCode, String secret, HttpServletRequest httpServletRequest);
+    CompletableFuture<AuthResponse> loginGoogle(GoogleLoginRequest googleLoginRequest, HttpServletRequest httpServletRequest);
 }

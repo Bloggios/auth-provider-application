@@ -46,6 +46,7 @@ import com.bloggios.auth.provider.payload.record.RefreshTokenDaoValidationRecord
 import com.bloggios.auth.provider.payload.record.RemoteAddressResponse;
 import com.bloggios.auth.provider.payload.request.AuthenticationRequest;
 import com.bloggios.auth.provider.payload.request.ForgetPasswordRequest;
+import com.bloggios.auth.provider.payload.request.GoogleLoginRequest;
 import com.bloggios.auth.provider.payload.request.RegisterRequest;
 import com.bloggios.auth.provider.payload.response.AuthResponse;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
@@ -447,13 +448,13 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
     }
 
     @Override
-    public CompletableFuture<AuthResponse> loginGoogle(String token, String secret, HttpServletRequest httpServletRequest) {
+    public CompletableFuture<AuthResponse> loginGoogle(GoogleLoginRequest googleLoginRequest, HttpServletRequest httpServletRequest) {
         long startTime = System.currentTimeMillis();
-        googleTokenVerifier.authorize(secret);
+        googleTokenVerifier.authorize(googleLoginRequest.getSecret());
         String userInfoEndpoint = "https://openidconnect.googleapis.com/v1/userinfo";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
+        headers.setBearerAuth(googleLoginRequest.getToken());
         HttpEntity<String> entity = new HttpEntity<>(headers);
         ResponseEntity<Object> response = restTemplate.exchange(
                 userInfoEndpoint,
