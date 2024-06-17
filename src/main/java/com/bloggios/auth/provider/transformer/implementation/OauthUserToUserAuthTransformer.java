@@ -30,6 +30,7 @@ import com.bloggios.auth.provider.modal.RoleEntity;
 import com.bloggios.auth.provider.modal.UserEntity;
 import com.bloggios.auth.provider.payload.GoogleOauthUserInfo;
 import com.bloggios.auth.provider.utils.IpUtils;
+import com.bloggios.auth.provider.utils.UsernameGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,8 +59,8 @@ import static com.bloggios.auth.provider.constants.ServiceConstants.USER_ROLE;
 public class OauthUserToUserAuthTransformer {
 
     private final RoleDao roleDao;
-    private final PasswordEncoder passwordEncoder;
     private final Environment environment;
+    private final UsernameGenerator usernameGenerator;
 
     public UserEntity transform(GoogleOauthUserInfo googleOauthUserInfo, HttpServletRequest httpServletRequest) {
         RoleEntity userRole = roleDao.findById(USER_ROLE);
@@ -67,6 +68,7 @@ public class OauthUserToUserAuthTransformer {
         List<RoleEntity> roleEntities = new ArrayList<>(List.of(userRole, dummyRole));
         return UserEntity.builder()
                 .oauthId(googleOauthUserInfo.getGoogleUserId())
+                .username(usernameGenerator.generate(googleOauthUserInfo.getEmail()))
                 .email(googleOauthUserInfo.getEmail())
                 .apiVersion(environment.getProperty(EnvironmentConstants.APPLICATION_VERSION))
                 .version(UUID.randomUUID().toString())
