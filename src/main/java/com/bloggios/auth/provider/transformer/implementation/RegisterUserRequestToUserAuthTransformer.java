@@ -31,6 +31,7 @@ import com.bloggios.auth.provider.modal.RoleEntity;
 import com.bloggios.auth.provider.modal.UserEntity;
 import com.bloggios.auth.provider.payload.request.RegisterRequest;
 import com.bloggios.auth.provider.utils.IpUtils;
+import com.bloggios.auth.provider.utils.UsernameGenerator;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -58,14 +59,16 @@ public class RegisterUserRequestToUserAuthTransformer {
     private final RoleDao roleDao;
     private final Environment environment;
     private final PasswordEncoder passwordEncoder;
+    private final UsernameGenerator usernameGenerator;
 
     public RegisterUserRequestToUserAuthTransformer(
             RoleDao roleDao,
-            Environment environment, PasswordEncoder passwordEncoder
-    ) {
+            Environment environment, PasswordEncoder passwordEncoder,
+            UsernameGenerator usernameGenerator) {
         this.roleDao = roleDao;
         this.environment = environment;
         this.passwordEncoder = passwordEncoder;
+        this.usernameGenerator = usernameGenerator;
     }
 
     public UserEntity transform(RegisterRequest registerRequest, HttpServletRequest httpServletRequest) {
@@ -87,6 +90,7 @@ public class RegisterUserRequestToUserAuthTransformer {
         }
         return UserEntity.builder()
                 .email(registerRequest.getEmail())
+                .username(usernameGenerator.generate(registerRequest.getEmail()))
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .apiVersion(environment.getProperty(EnvironmentConstants.APPLICATION_VERSION))
                 .version(UUID.randomUUID().toString())

@@ -52,7 +52,7 @@ import java.util.Map;
 public class UserPrincipal implements OAuth2User, UserDetails {
 
     private String userId;
-    private String username;
+    private String bloggiosUsername;
     private String email;
     private String password;
     private Boolean isEnabled;
@@ -65,7 +65,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     public UserPrincipal(
             String userId,
-            String username,
+            String bloggiosUsername,
             String email,
             String password,
             Boolean isEnabled,
@@ -76,7 +76,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
             Boolean isBadge
     ) {
         this.userId = userId;
-        this.username = username;
+        this.bloggiosUsername = bloggiosUsername;
         this.email = email;
         this.password = password;
         this.isEnabled = isEnabled;

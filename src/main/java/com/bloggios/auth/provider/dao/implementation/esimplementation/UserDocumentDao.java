@@ -78,4 +78,8 @@ public class UserDocumentDao extends EsAbstractDao<UserDocument, UserDocumentRep
     public Optional<UserDocument> findByEmailOrUsername(String data) {
         return repository.findByEmailOrUsername(data, data);
     }
+
+    public Optional<UserDocument> findByUsername(String username) {
+        return repository.findByUsername(username);
+    }
 }

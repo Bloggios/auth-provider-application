@@ -35,10 +35,8 @@ import com.bloggios.auth.provider.payload.response.ModuleResponse;
 import com.bloggios.auth.provider.service.AuthenticationService;
 import com.bloggios.auth.provider.utils.AsyncUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
