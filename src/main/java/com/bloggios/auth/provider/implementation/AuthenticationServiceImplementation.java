@@ -534,7 +534,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
                 .cookieToken(cookieToken)
                 .remoteAddress(IpUtils.getRemoteAddress(httpServletRequest))
                 .email(principal.getEmail())
-                .username(principal.getUsername())
+                .username(principal.getBloggiosUsername())
                 .authorities(userAuthentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .build();
         CompletableFuture.runAsync(() -> refreshTokenPersistence.persist(
