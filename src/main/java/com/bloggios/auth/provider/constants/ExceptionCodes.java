@@ -105,4 +105,5 @@ public class ExceptionCodes {
     public static final String ROLES_CANNOT_CONTAINS_NULL = "DE__AUTH-2049";
     public static final String GOOGLE_SECRET_VERIFICATION_FAILED = "DE__AUTH-2050";
     public static final String LOGIN_PROVIDER_NOT_VALID = "DE__AUTH-2051";
+    public static final String UNABLE_TO_GENERATE_USERNAME = "DE__AUTH-2052";
 }

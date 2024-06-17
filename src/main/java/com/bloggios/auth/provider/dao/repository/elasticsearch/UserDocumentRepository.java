@@ -42,4 +42,5 @@ import java.util.Optional;
 public interface UserDocumentRepository extends ElasticsearchRepository<UserDocument, String> {
     Optional<UserDocument> findByEmail(String email);
     Optional<UserDocument> findByEmailOrUsername(String email, String username);
+    Optional<UserDocument> findByUsername(String username);
 }
