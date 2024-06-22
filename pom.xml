@@ -157,7 +157,7 @@
     <repositories>
         <repository>
             <id>bloggios-repository</id>
-            <url>https://spring-repo.bloggios.cloud</url>
+            <url>https://repo.bloggios.in</url>
         </repository>
     </repositories>
 
