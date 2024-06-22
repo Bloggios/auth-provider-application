@@ -28,9 +28,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      - name: Build with Maven
-        run: mvn clean install
-
       - name: Stopping Container
         uses: appleboy/ssh-action@master
         with:
