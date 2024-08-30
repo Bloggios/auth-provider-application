@@ -31,9 +31,14 @@ import com.bloggios.auth.provider.payload.request.ForgetPasswordRequest;
 import com.bloggios.auth.provider.payload.request.GoogleLoginRequest;
 import com.bloggios.auth.provider.payload.request.RegisterRequest;
 import com.bloggios.auth.provider.payload.response.AuthResponse;
+import com.bloggios.auth.provider.payload.response.ExceptionResponse;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
 import com.bloggios.auth.provider.service.AuthenticationService;
 import com.bloggios.auth.provider.utils.AsyncUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -66,11 +71,45 @@ public class AuthenticationController {
     }
 
     @PostMapping(EndpointConstants.AuthenticationController.REGISTER_PATH)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = ModuleResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<ModuleResponse> registerUser(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.registerUser(registerRequest, request)));
     }
 
     @PostMapping(EndpointConstants.AuthenticationController.LOGIN_PATH)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         CompletableFuture<AuthResponse> authenticate = authenticationService.authenticate(authenticationRequest, httpServletRequest, httpServletResponse);
         AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);
@@ -82,16 +121,67 @@ public class AuthenticationController {
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.VERIFY_OTP)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = ModuleResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<ModuleResponse> verifyOtp(@RequestHeader("otp") String otp, @RequestParam("userId") String userId) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.verifyOtp(otp, userId)));
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.RESEND_OTP)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = ModuleResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<ModuleResponse> resendOtp(@RequestParam(value = "userId") String userId) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.resendOtp(userId)));
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.REFRESH_TOKEN)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         AuthResponse response = AsyncUtils.getAsyncResult(authenticationService.refreshToken(httpServletRequest, httpServletResponse));
         return ResponseEntity
@@ -102,11 +192,45 @@ public class AuthenticationController {
     }
 
     @PostMapping(EndpointConstants.AuthenticationController.OTP_USER_ID)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = ModuleResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<ModuleResponse> otpRedirectUserId(@RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.otpRedirectUserId(authenticationRequest)));
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.LOGOUT)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<AuthResponse> logoutUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         AuthResponse authResponse = AsyncUtils.getAsyncResult(authenticationService.logoutUser(httpServletRequest, httpServletResponse));
         return ResponseEntity
@@ -116,6 +240,23 @@ public class AuthenticationController {
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.USER_IP)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = String.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<String> userIp(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String clientIp = httpServletRequest.getHeader("X-Forwarded-For");
         if (clientIp != null && clientIp.contains(",")) {
@@ -125,6 +266,23 @@ public class AuthenticationController {
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.REFRESH_TOKEN_SOCIAL)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<AuthResponse> refreshTokenSocial(@RequestParam String token, HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) {
         AuthResponse response = AsyncUtils.getAsyncResult(authenticationService.refreshTokenSocial(token, httpServletResponse, httpServletRequest));
         return ResponseEntity
@@ -135,21 +293,88 @@ public class AuthenticationController {
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.FORGET_PASSWORD_OTP_PATH)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = ModuleResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<ModuleResponse> forgetPasswordOtp(@RequestParam(name = "email") String email) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.forgetPasswordOtp(email)));
     }
 
     @PostMapping(EndpointConstants.AuthenticationController.FORGET_PASSWORD_PATH)
+    @Operation(
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = ModuleResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<ModuleResponse> forgetPassword(@RequestBody ForgetPasswordRequest forgetPasswordRequest) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.forgetPassword(forgetPasswordRequest)));
     }
 
     @GetMapping(EndpointConstants.AuthenticationController.REMOTE_ADDRESS)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = RemoteAddressResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<RemoteAddressResponse> remoteAddress(HttpServletRequest request) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(authenticationService.remoteAddress(request)));
     }
 
     @PostMapping(EndpointConstants.OAuthController.GOOGLE_LOGIN)
+    @Operation(
+            
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            }
+    )
     public ResponseEntity<AuthResponse> loginGoogle(@RequestBody GoogleLoginRequest googleLoginRequest, HttpServletRequest httpServletRequest) {
         CompletableFuture<AuthResponse> authenticate = authenticationService.loginGoogle(googleLoginRequest, httpServletRequest);
         AuthResponse asyncResult = AsyncUtils.getAsyncResult(authenticate);

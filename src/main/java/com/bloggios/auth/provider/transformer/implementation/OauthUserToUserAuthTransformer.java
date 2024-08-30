@@ -33,7 +33,6 @@ import com.bloggios.auth.provider.utils.IpUtils;
 import com.bloggios.auth.provider.utils.UsernameGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;

@@ -27,11 +27,17 @@ import com.bloggios.auth.provider.authentication.UserPrincipal;
 import com.bloggios.auth.provider.constants.EndpointConstants;
 import com.bloggios.auth.provider.payload.request.AssignRoleRequest;
 import com.bloggios.auth.provider.payload.request.ChangePasswordRequest;
+import com.bloggios.auth.provider.payload.response.ExceptionResponse;
 import com.bloggios.auth.provider.payload.response.ModuleResponse;
 import com.bloggios.auth.provider.payload.response.UserAuthResponse;
 import com.bloggios.auth.provider.payload.response.UserProfileResponse;
 import com.bloggios.auth.provider.service.UserService;
 import com.bloggios.auth.provider.utils.AsyncUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -58,25 +64,119 @@ public class UserController {
     }
 
     @GetMapping
+    @Operation(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = false
+            ),
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = UserAuthResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            },
+            security = {
+                    @SecurityRequirement(
+                            name = "bearerAuth"
+                    )
+            }
+    )
     public ResponseEntity<UserAuthResponse> getLoggedInUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(userService.getLoggedInUser(userPrincipal)));
     }
 
     @PostMapping(EndpointConstants.UserController.CHANGE_PASSWORD)
+    @Operation(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = false
+            ),
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = ModuleResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            },
+            security = {
+                    @SecurityRequirement(
+                            name = "bearerAuth"
+                    )
+            }
+    )
     public ResponseEntity<ModuleResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(userService.changePassword(changePasswordRequest, userPrincipal)));
     }
 
     @PostMapping(EndpointConstants.UserController.ASSIGN_ROLES)
+    @Operation(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = false
+            ),
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = ModuleResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            },
+            security = {
+                    @SecurityRequirement(
+                            name = "bearerAuth"
+                    )
+            }
+    )
     public ResponseEntity<ModuleResponse> assignRole(@RequestBody AssignRoleRequest assignRoleRequest, @AuthenticationPrincipal UserPrincipal authenticatedUser) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(userService.assignRoles(assignRoleRequest, authenticatedUser)));
     }
 
-    /**
-     * Internal API
-     * To be called through Feign Client
-     */
+
     @GetMapping(EndpointConstants.UserController.GET_USER_PROFILE_RESPONSE)
+    @Operation(
+            summary = "This API is developed for Inter Communication between Microservices",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = false
+            ),
+            responses = {
+                    @ApiResponse(description = "SUCCESS", responseCode = "200", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = UserProfileResponse.class)
+                    )),
+                    @ApiResponse(description = "No Content", responseCode = "401", content = {
+                            @Content(schema = @Schema(implementation = Void.class))
+                    }),
+                    @ApiResponse(description = "FORBIDDEN", responseCode = "403", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+                    @ApiResponse(description = "BAD REQUEST", responseCode = "400", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            },
+            security = {
+                    @SecurityRequirement(
+                            name = "bearerAuth"
+                    )
+            }
+    )
     public ResponseEntity<UserProfileResponse> getUserProfileResponse(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return ResponseEntity.ok(AsyncUtils.getAsyncResult(userService.getUserProfileResponse(userPrincipal)));
     }
