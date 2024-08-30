@@ -114,3 +114,38 @@ authentication:
       - /auth-provider/oauth/**
       - /actuator/**
       - /oauth2/**
+      - /api/v1/auth/**"
+      - /v2/api-docs
+      - /swagger-resources
+      - /swagger-resources/**
+      - /configuration/ui
+      - /configuration/security
+      - /swagger-ui/**
+      - /webjars/**
+      - /swagger-ui.html
+      - /v3/api-docs
+      - /v3/api-docs/**
+
+swagger-properties:
+  group-name:
+    definition: ${spring.application.name}
+    scan-packages: com.bloggios.auth.provider
+  info:
+    title: Bloggios - Auth Provider Application
+    version: @version@
+    description: API Documentation for auth-provider-application
+    summary: The Auth Provider Application microservice, developed with Java 17 and Spring Boot, is designed to offer robust authentication and authorization services for Bloggios. This microservice ensures secure access and user management, enhancing the overall security framework of the platform.
+    contact:
+      name: Bloggios
+      email: support@bloggios.com
+      url: https://www.bloggios.com
+    license:
+      name: Apache 2 License
+      url: https://github.com/Bloggios/auth-provider-application/blob/main/LICENSE
+  servers:
+    local:
+      name: Local Port
+      url: http://localhost:${server.port}
+    production:
+      name: Hosted Port
+      url: https://api.bloggios.com
