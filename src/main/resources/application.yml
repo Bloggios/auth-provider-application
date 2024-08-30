@@ -65,6 +65,10 @@ auth-server:
         origin-name: http://localhost:2000
         must-roles:
           - ROLE_DEVELOPER
+      swagger-testing:
+        origin-name: http://localhost:7001
+        must-roles:
+          - ROLE_DEVELOPER
   OAuth2:
     OAuth-data:
       google:
