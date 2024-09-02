@@ -93,8 +93,6 @@ jobs:
           port: 22
           script: |
             cd /root/microservices/auth-provider-application
-            git stash
-            git pull origin main
             chmod +x mvnw
             ./mvnw clean package
 
