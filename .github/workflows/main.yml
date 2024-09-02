@@ -56,6 +56,19 @@ jobs:
             rm /root/microservices/auth-provider-application/src/main/resources/auth-logback.xml
             cp /root/secrets/logback/auth-logback.xml /root/microservices/auth-provider-application/src/main/resources
 
+      - name: Updating Project
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.V8_HOST }}
+          username: ${{ secrets.V8_USERNAME }}
+          key: ${{ secrets.V8_VPS_PRIVATE_KEY }}
+          port: 22
+          script: |
+            set +e
+            cd /root/microservices/blog-provider-application
+            git stash
+            git fetch origin main && git reset --hard FETCH_HEAD
+
       - name: Copying Secrets
         uses: appleboy/ssh-action@master
         with:
