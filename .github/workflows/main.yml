@@ -68,8 +68,8 @@ jobs:
                rm /root/microservices/auth-provider-application/src/main/resources/security/privkey.pem
                /root/microservices/auth-provider-application/src/main/resources/security/pubkey.pem
                set -e
-               cp /root/secrets/certificates/privkey.pem /root/microservices/auth-provider-application/src/main/resources/security
-               cp /root/secrets/certificates/pubkey.pem /root/microservices/auth-provider-application/src/main/resources/security
+               cp /root/secrets/certificates/privkey.pem /root/microservices/auth-provider-application/src/main/resources/security/
+               cp /root/secrets/certificates/pubkey.pem /root/microservices/auth-provider-application/src/main/resources/security/
 
       - name: Generating Docker Image for Bloggios
         uses: appleboy/ssh-action@master
@@ -81,6 +81,8 @@ jobs:
           script: |
             cd /root/microservices/auth-provider-application
             git stash
+            git pull origin main
+            git stash pop
             git fetch origin main && git reset --hard FETCH_HEAD
             chmod +x mvnw
             ./mvnw clean package
