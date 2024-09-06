@@ -65,9 +65,9 @@ jobs:
           port: 22
           script: |
                set +e
-               rm /root/microservices/auth-provider-application/src/main/resources/security/privkey.pem
-               rm /root/microservices/auth-provider-application/src/main/resources/security/pubkey.pem
+               rm /root/microservices/auth-provider-application/src/main/resources/security
                set -e
+               mkdir -p /root/microservices/auth-provider-application/src/main/resources/security/
                cp /root/secrets/certificates/privkey.pem /root/microservices/auth-provider-application/src/main/resources/security/
                cp /root/secrets/certificates/pubkey.pem /root/microservices/auth-provider-application/src/main/resources/security/
 
@@ -82,6 +82,7 @@ jobs:
             cd /root/microservices/auth-provider-application
             git stash
             git pull origin main
+            rm /root/microservices/auth-provider-application/src/main/resources/security
             git stash pop
             git fetch origin main && git reset --hard FETCH_HEAD
             chmod +x mvnw
